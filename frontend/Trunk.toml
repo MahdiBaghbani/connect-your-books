@@ -1,0 +1,8 @@
+[build]
+target = "index.html"
+dist = "dist"
+
+[[hooks]]
+stage = "post_build"
+command = "sh"
+command_arguments = ["-c", "NODE_ENV=production npx --yes tailwindcss -c ./tailwind.config.js -o $TRUNK_STAGING_DIR/tailwind.css --minify"]

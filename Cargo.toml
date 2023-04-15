@@ -1,0 +1,25 @@
+[package]
+name = "cyb"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[profile.release]
+# Do not perform backtrace for panic on release builds.
+panic = "abort"
+# Perform optimizations on all codegen units.
+codegen-units = 1
+# "s" for normal optimize or "z" to optimize "aggressively" for size.
+opt-level = "z"
+# Enable link time optimization.
+lto = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[workspace]
+members = [".", "api", "core", "database", "database/entity", "database/migration", "frontend"]
+
+[dependencies]
+api = { path = "api" }
+dotenvy = "0.15"
+tracing = "0.1"
+tracing-subscriber = "0.3"

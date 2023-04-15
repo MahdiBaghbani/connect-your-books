@@ -1,0 +1,24 @@
+[package]
+name = "database"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "database"
+path = "src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+entity = { path = "entity" }
+sea-orm = { version = "0.11", features = ["debug-print", "runtime-tokio-rustls", "sqlx-postgres", "macros"] }
+uuid = { version = "1.3.0", features = ["v4"] }
+
+[dev-dependencies]
+tokio = { version = "1.25.0", features = ["macros", "rt-multi-thread"] }
+
+[features]
+mock = ["sea-orm/mock"]
+
+[[test]]
+name = "mock"
+required-features = ["mock"]
