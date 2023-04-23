@@ -6,8 +6,6 @@ use salvo::logging::Logger;
 use salvo::serve_static::StaticDir;
 use salvo::{Router, Server};
 
-use core::connectors::letspeppol::acube::authentication;
-
 #[tokio::main]
 pub async fn run() {
     let host: String = env::var("CYB_HOST").expect("CYB_HOST is not set in .env file");
@@ -21,21 +19,18 @@ pub async fn run() {
     let _db_user: String = env::var("CYB_DB_USER").expect("CYB_DB_USER is not set in .env file");
     let _db_pass: String = env::var("CYB_DB_PASS").expect("CYB_DB_PASS is not set in .env file");
 
-    let client: String = env::var("CYB_CLIENT").expect("CYB_CLIENT is not set in .env file");
+    let frontend_directory: String =
+        env::var("CYB_FRONTEND_DIRECTORY").expect("CYB_FRONTEND_DIRECTORY is not set in .env file");
 
     let router: Router = Router::new()
         .hoop(Logger)
         .hoop(Compression::new().with_algos(&[CompressionAlgo::Brotli]))
         .path("<**path>")
         .get(
-            StaticDir::new([client])
+            StaticDir::new([frontend_directory])
                 .with_defaults("index.html")
                 .with_listing(true),
         );
-
-    let s = authentication::Authentication::create_authentication();
-
-    // s.get_token().await;
 
     let acceptor: TcpListener = TcpListener::bind(&server_url);
     tracing::info!("Listening on {server_url}");
