@@ -2,15 +2,18 @@
 // doesn't find being used there. We also check index.html in case you have anything in there.
 
 module.exports = {
+    // add the folders and files from your templates that might have css classes in them.
     content: [
         "./index.html",
         "./src/**/*.rs",
         "./dist/**/*.html",
         "./dist/**/*.css",
     ],
+    // enable dark mode via class strategy.
     darkMode: 'class',
     theme: {
         extend: {
+            // extend base Tailwind CSS utility classes.
             colors: {
                 primary: {
                     "50": "#eff6ff",
