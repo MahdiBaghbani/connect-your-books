@@ -29,6 +29,14 @@ module.exports = {
                 }
             }
         },
+        fontFamily: {
+            'body': [
+                'Roboto',
+            ],
+            'sans': [
+                'Roboto',
+            ]
+        }
     },
     variants: {},
     plugins: [
