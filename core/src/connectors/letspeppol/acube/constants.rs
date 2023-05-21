@@ -2,6 +2,8 @@ use std::env;
 
 use serde::{Deserialize, Serialize};
 
+use crate::utility::env_utils::get_env_var;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
     email: String,
@@ -22,31 +24,25 @@ pub struct Constants {
     token_file: String,
 }
 
+impl Default for Constants {
+    fn default() -> Self {
+        Constants::new()
+    }
+}
+
 impl Constants {
-    // associated functions.
-    pub fn create_constants() -> Constants {
+    pub fn new() -> Self {
         Constants {
-            use_sandbox: env::var("CYB_ACUBE_SANDBOX")
-                .expect("CYB_ACUBE_SANDBOX is not set in .env file")
-                == "true",
-            sandbox_base_url: env::var("CYB_ACUBE_SAND_URL")
-                .expect("CYB_ACUBE_SAND_URL is not set in .env file"),
-            sandbox_login_url: env::var("CYB_ACUBE_SAND_LOGIN_URL")
-                .expect("CYB_ACUBE_SAND_LOGIN_URL is not set in .env file"),
-            sandbox_user: env::var("CYB_ACUBE_SAND_USER")
-                .expect("CYB_ACUBE_SAND_USER is not set in .env file"),
-            sandbox_pass: env::var("CYB_ACUBE_SAND_PASS")
-                .expect("CYB_ACUBE_SAND_PASS is not set in .env file"),
-            production_base_url: env::var("CYB_ACUBE_PROD_URL")
-                .expect("CYB_ACUBE_PROD_URL is not set in .env file"),
-            production_login_url: env::var("CYB_ACUBE_PROD_LOGIN_URL")
-                .expect("CYB_ACUBE_PROD_LOGIN_URL is not set in .env file"),
-            production_user: env::var("CYB_ACUBE_PROD_USER")
-                .expect("CYB_ACUBE_PROD_USER is not set in .env file"),
-            production_pass: env::var("CYB_ACUBE_PROD_PASS")
-                .expect("CYB_ACUBE_PROD_PASS is not set in .env file"),
-            token_file: env::var("CYB_ACUBE_TOKEN_FILE")
-                .expect("CYB_ACUBE_TOKEN_FILE is not set in .env file"),
+            use_sandbox: get_env_var("CYB_ACUBE_SANDBOX") == "true",
+            sandbox_base_url: get_env_var("CYB_ACUBE_SAND_URL"),
+            sandbox_login_url: get_env_var("CYB_ACUBE_SAND_LOGIN_URL"),
+            sandbox_user: get_env_var("CYB_ACUBE_SAND_USER"),
+            sandbox_pass: get_env_var("CYB_ACUBE_SAND_PASS"),
+            production_base_url: get_env_var("CYB_ACUBE_PROD_URL"),
+            production_login_url: get_env_var("CYB_ACUBE_PROD_LOGIN_URL"),
+            production_user: get_env_var("CYB_ACUBE_PROD_USER"),
+            production_pass: get_env_var("CYB_ACUBE_PROD_PASS"),
+            token_file: get_env_var("CYB_ACUBE_TOKEN_FILE"),
         }
     }
 

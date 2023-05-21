@@ -16,10 +16,16 @@ pub struct Authentication {
     reqwest_client: ClientWithMiddleware,
 }
 
+impl Default for Authentication {
+    fn default() -> Self {
+        Authentication::new()
+    }
+}
+
 impl Authentication {
-    pub fn create_authentication() -> Authentication {
+    pub fn new() -> Self {
         Authentication {
-            constants: Constants::create_constants(),
+            constants: Constants::new(),
             reqwest_client: reqwest_utils::create_reqwest_client(),
         }
     }
@@ -79,7 +85,7 @@ impl Token {
         // The token is composed by 3 parts, each part is delimited by a dot (.) char.
         // Exploding the token by . and doing a base64 decode of the second part you
         // will obtain some useful information.
-        let parts: Vec<&str> = self.token.split(".").collect();
+        let parts: Vec<&str> = self.token.split('.').collect();
         let bytes: Vec<u8> = general_purpose::STANDARD.decode(parts[1])?;
         Ok(serde_json::from_slice(&bytes)?)
     }

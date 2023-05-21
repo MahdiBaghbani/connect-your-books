@@ -1,6 +1,3 @@
-use std::error::Error;
-
-use reqwest::{Response, StatusCode};
 use reqwest_middleware::ClientWithMiddleware;
 
 use crate::connectors::letspeppol::acube::authentication::Authentication;
@@ -12,10 +9,16 @@ pub struct Acube {
     reqwest_client: ClientWithMiddleware,
 }
 
+impl Default for Acube {
+    fn default() -> Self {
+        Acube::new()
+    }
+}
+
 impl Acube {
-    pub fn create_acube() -> Acube {
+    pub fn new() -> Self {
         Acube {
-            authentication: Authentication::create_authentication(),
+            authentication: Authentication::new(),
             reqwest_client: reqwest_utils::create_reqwest_client(),
         }
     }
