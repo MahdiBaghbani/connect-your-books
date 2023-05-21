@@ -6,6 +6,7 @@
 use seed::{prelude::*, *};
 
 use crate::pages::components;
+use crate::pages::components::footer::view_footer;
 
 pub mod pages;
 
@@ -26,16 +27,19 @@ fn init(url: Url, orders: &mut impl Orders<Msg>) -> Model {
         .stream(streams::window_event(Ev::Click, |_| Msg::HideProfileMenu));
     Model {
         ctx: Context {
-            user: None,
+            user: Some(User {
+                username: "Mahdi".to_string(),
+                email: "mahdi.baghbani1@gmail.com".to_string(),
+            }),
             token: None,
         },
 
         base_url: url.to_hash_base_url(),
         page: Pages::init(url.clone(), orders),
-        isDarkMode: false,
+        is_dark_mode: false,
         navigation_bar: init_navigation_bar(url.to_hash_base_url()),
         navigation_bar_active_item_id: init_active_navigation_bar_item_id(url),
-        navigation_bar_mobile_visible: false,
+        navigation_bar_mobile_menu_visible: false,
         profile_menu: init_profile_menu(),
         profile_menu_visible: false,
     }
@@ -79,7 +83,7 @@ fn init_active_navigation_bar_item_id(mut url: Url) -> u8 {
         [PROJECTS] => 2,
         [CALENDAR] => 3,
         [REPORTS] => 4,
-        _ => 0,
+        _ => 10,
     }
 }
 
@@ -112,10 +116,10 @@ pub struct Model {
     ctx: Context,
     base_url: Url,
     page: Pages,
-    isDarkMode: bool,
+    is_dark_mode: bool,
     navigation_bar: Vec<NavigationItem>,
     navigation_bar_active_item_id: u8,
-    navigation_bar_mobile_visible: bool,
+    navigation_bar_mobile_menu_visible: bool,
     profile_menu: Vec<NavigationItem>,
     profile_menu_visible: bool,
 }
@@ -233,9 +237,9 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
         Msg::ChangeNavigationBarActiveItem(id) => {
             model.navigation_bar_active_item_id = id;
         }
-        Msg::ToggleDarkMode => model.isDarkMode = not(model.isDarkMode),
+        Msg::ToggleDarkMode => model.is_dark_mode = not(model.is_dark_mode),
         Msg::ToggleNavigationBarMobileView => {
-            model.navigation_bar_mobile_visible = not(model.navigation_bar_mobile_visible)
+            model.navigation_bar_mobile_menu_visible = not(model.navigation_bar_mobile_menu_visible)
         }
         Msg::ToggleProfileMenu => {
             model.profile_menu_visible = not(model.profile_menu_visible);
@@ -291,7 +295,7 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
 
 fn view(model: &Model) -> Vec<Node<Msg>> {
     vec![div![
-        IF!(model.isDarkMode => C!["dark"]),
+        IF!(model.is_dark_mode => C!["dark"]),
         C!["min-h-full"],
         components::navigation_bar::view_navigation_bar(
             model,
@@ -299,6 +303,7 @@ fn view(model: &Model) -> Vec<Node<Msg>> {
             model.ctx.user.as_ref(),
         ),
         view_content(&model.page),
+        view_footer(),
     ]]
 }
 

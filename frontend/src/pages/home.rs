@@ -5,6 +5,8 @@
 
 use seed::{prelude::*, *};
 
+use crate::components::svg;
+
 // ------ ------
 //     Init
 // ------ ------
@@ -55,12 +57,13 @@ pub fn view() -> Vec<Node<Msg>> {
         view_hero_section(),
         view_feature_list(),
         view_call_to_action(),
+        view_our_team(),
     ]]
 }
 
 fn view_hero_section() -> Node<Msg> {
     section![
-        C!["bg-white", "dark:bg-gray-900"],
+        C!["bg-white", "dark:bg-gray-900", "mt-[65px]"],
         div![
             C![
                 "grid",
@@ -398,9 +401,19 @@ fn view_call_to_action() -> Node<Msg> {
     section![
         C!["bg-white", "dark:bg-gray-900"],
         div![
-            C!["gap-8",
-                "items-center", "py-8", "px-4", "mx-auto", "max-w-screen-xl", "xl:gap-16" "md:grid", "md:grid-cols-2"
-                "sm:py-16", "lg:px-6"],
+            C![
+                "gap-8",
+                "items-center",
+                "py-8",
+                "px-4",
+                "mx-auto",
+                "max-w-screen-xl",
+                "xl:gap-16",
+                "md:grid",
+                "md:grid-cols-2",
+                "sm:py-16",
+                "lg:px-6"
+            ],
             img![
                 C!["w-full", "dark:hidden"],
                 attrs! {
@@ -440,6 +453,158 @@ fn view_call_to_action() -> Node<Msg> {
                         "focus:ring-4", "focus:ring-primary-300", "font-medium", "rounded-lg",
                         "text-sm", "px-5", "py-2.5", "text-center", "dark:focus:ring-primary-900"],
                     "Get started"
+                ],
+            ],
+        ],
+    ]
+}
+
+fn view_our_team() -> Node<Msg> {
+    section![
+        C!["bg-white", "dark:bg-gray-900"],
+        div![
+            C![
+                "py-8",
+                "px-4",
+                "mx-auto",
+                "max-w-screen-xl",
+                "lg:py-16",
+                "lg:px-6"
+            ],
+            div![
+                C![
+                    "mx-auto",
+                    "max-w-screen-sm",
+                    "text-center",
+                    "mb-8",
+                    "lg:mb-16"
+                ],
+                h2![
+                    C![
+                        "mb-4",
+                        "text-4xl",
+                        "tracking-tight",
+                        "font-extrabold",
+                        "text-gray-900",
+                        "dark:text-white"
+                    ],
+                    "Our Team",
+                ],
+                p![
+                    C![
+                        "font-light",
+                        "text-gray-500",
+                        "lg:mb-16",
+                        "sm:text-xl",
+                        "dark:text-gray-400"
+                    ],
+                    "Explore the whole collection of open-source",
+                ],
+            ],
+            div![
+                C!["grid", "gap-8", "mb-6", "lg:mb-16", "md:grid-cols-2"],
+                div![
+                    C![
+                        "items-center",
+                        "bg-gray-50",
+                        "rounded-lg",
+                        "shadow sm:flex",
+                        "dark:bg-gray-800",
+                        "dark:border-gray-700"
+                    ],
+                    a![
+                        attrs! {
+                            At::Href=>"#"
+                        },
+                        img![
+                            C!["w-full", "rounded-lg", "sm:rounded-none", "sm:rounded-l-lg"],
+                            attrs! {
+                                At::Src=>"https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png",
+                                At::Alt=>"Bonnie Avatar"
+                            }
+                        ],
+                    ],
+                    div![
+                        C!["p-5"],
+                        h3![
+                            C![
+                                "text-xl",
+                                "font-bold",
+                                "tracking-tight",
+                                "text-gray-900",
+                                "dark:text-white"
+                            ],
+                            a![
+                                attrs! {
+                                    At::Href=>"#"
+                                },
+                                "Michiel de Jong"
+                            ]
+                        ],
+                        span![
+                            C!["text-gray-500", "dark:text-gray-400"],
+                            "Founder & Software Engineer",
+                        ],
+                        p![
+                            C![
+                                "mt-3",
+                                "mb-4",
+                                "font-light",
+                                "text-gray-500",
+                                "dark:text-gray-400"
+                            ],
+                            "Michiel drives the technical strategy of the Pondersource",
+                        ],
+                        ul![
+                            C!["flex", "space-x-4", "sm:mt-0"],
+                            li![a![
+                                C![
+                                    "text-gray-500",
+                                    "hover:text-gray-900",
+                                    "dark:hover:text-white"
+                                ],
+                                attrs! {
+                                    At::Href=>"#"
+                                },
+                                svg![
+                                    C!["w-5", "h-5"],
+                                    attrs! {
+                                        At::Fill=>"currentColor",
+                                        At::ViewBox=>"0 0 24 24",
+                                        At::AriaHidden=>"true",
+                                        At::ClipRule=>"evenodd",
+                                    },
+                                    path![attrs! {
+                                        At::FillRule=>"evenodd",
+                                        At::D=>svg::logo_github(),
+                                    },],
+                                ],
+                            ],],
+                            li![a![
+                                C![
+                                    "text-gray-500",
+                                    "hover:text-gray-900",
+                                    "dark:hover:text-white"
+                                ],
+                                attrs! {
+                                    At::Href=>"#"
+                                },
+                                svg![
+                                    C!["w-5", "h-5"],
+                                    attrs! {
+                                        At::Fill=>"currentColor",
+                                        At::ViewBox=>"0 0 24 24",
+                                        At::AriaHidden=>"true",
+                                        At::ClipRule=>"evenodd",
+                                    },
+                                    path![attrs! {
+                                        At::FillRule=>"evenodd",
+                                        At::D=>svg::logo_linkedin(),
+                                    },],
+                                ],
+                            ],],
+                        ],
+                    ],
                 ],
             ],
         ],
