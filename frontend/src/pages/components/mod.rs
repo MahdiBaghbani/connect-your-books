@@ -1,3 +1,3 @@
 pub mod footer;
-pub mod navigation_bar;
+pub mod navbar;
 pub mod svg;

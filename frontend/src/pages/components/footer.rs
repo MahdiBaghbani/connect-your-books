@@ -4,7 +4,7 @@
 #![allow(clippy::wildcard_imports)]
 
 use chrono::prelude::*;
-use seed::{prelude::*, *};
+use seed::{*, prelude::*};
 
 use crate::Msg;
 

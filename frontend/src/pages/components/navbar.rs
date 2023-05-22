@@ -3,10 +3,10 @@
 // but some rules are too "annoying" or are not applicable for your case.)
 #![allow(clippy::wildcard_imports)]
 
-use seed::{prelude::*, *};
+use seed::{*, prelude::*};
 
-use crate::components::svg;
 use crate::{Model, Msg, User};
+use crate::components::svg;
 
 pub fn view_navbar(model: &Model, base_url: &Url, user: Option<&User>) -> Vec<Node<Msg>> {
     vec![nav![
@@ -22,25 +22,21 @@ pub fn view_navbar(model: &Model, base_url: &Url, user: Option<&User>) -> Vec<No
             "border-gray-200",
             "dark:border-gray-600"
         ],
-        view_navbar_main(model, base_url, user),
+        div![
+            C![
+                "max-w-screen-xl",
+                "flex",
+                "flex-wrap",
+                "items-center",
+                "justify-between",
+                "mx-auto p-4"
+            ],
+            view_navbar_left(base_url),
+            view_navbar_right(model, user),
+            // middle section should be last item here do not move it up or down!
+            IF!(user.is_some()=>view_navbar_middle(model))
+        ]
     ]]
-}
-
-fn view_navbar_main(model: &Model, base_url: &Url, user: Option<&User>) -> Node<Msg> {
-    div![
-        C![
-            "max-w-screen-xl",
-            "flex",
-            "flex-wrap",
-            "items-center",
-            "justify-between",
-            "mx-auto p-4"
-        ],
-        view_navbar_left(base_url),
-        view_navbar_right(model, user),
-        // middle section should be last item here do not move it up or down!
-        IF!(user.is_some()=>view_navbar_middle(model))
-    ]
 }
 
 fn view_navbar_left(base_url: &Url) -> Node<Msg> {
@@ -71,9 +67,8 @@ fn view_navbar_left(base_url: &Url) -> Node<Msg> {
 }
 
 fn view_navbar_middle(model: &Model) -> Node<Msg> {
-    // ------ Navigation Bar Items ------
     div![
-        IF!(!model.navigation_bar_mobile_menu_visible => C!["hidden"]),
+        IF!(!model.navbar_hamburger_menu_visible => C!["hidden"]),
         C![
             "items-center",
             "justify-between",
@@ -104,11 +99,11 @@ fn view_navbar_middle(model: &Model) -> Node<Msg> {
                 "md:dark:bg-gray-900",
                 "dark:border-gray-700"
             ],
-            model.navigation_bar.iter().map(|item| {
+            model.navbar.iter().map(|item| {
                 let id: u8 = item.id;
                 a![
                     C!["block", "py-2", "pl-3", "pr-4", "rounded"],
-                    if id == model.navigation_bar_active_item_id {
+                    if id == model.navbar_active_item_id {
                         C![
                             "text-white",
                             "bg-blue-700",
@@ -134,7 +129,7 @@ fn view_navbar_middle(model: &Model) -> Node<Msg> {
                     },
                     attrs! {At::Href => format!("{}", item.href)},
                     format!("{}", item.name),
-                    ev(Ev::Click, move |_| Msg::ChangeNavigationBarActiveItem(id)),
+                    ev(Ev::Click, move |_| Msg::ChangeNavBarActiveItem(id)),
                 ]
             }),
         ],
@@ -148,7 +143,7 @@ fn view_navbar_right(model: &Model, user: Option<&User>) -> Node<Msg> {
         if let Some(_user) = user {
             vec![
                 view_profile_button(model),
-                view_navigation_bar_mobile_menu_button(&model.navigation_bar_mobile_menu_visible),
+                view_navbar_hamburger_menu(&model.navbar_hamburger_menu_visible),
             ]
         } else {
             vec![view_signin_button()]
@@ -319,7 +314,7 @@ fn view_signin_button() -> Node<Msg> {
     ]
 }
 
-fn view_navigation_bar_mobile_menu_button(visible: &bool) -> Node<Msg> {
+fn view_navbar_hamburger_menu(visible: &bool) -> Node<Msg> {
     button![
         C![
             "inline-flex",
@@ -374,6 +369,6 @@ fn view_navigation_bar_mobile_menu_button(visible: &bool) -> Node<Msg> {
                 },
             ],
         ],
-        ev(Ev::Click, move |_| Msg::ToggleNavigationBarMobileView),
+        ev(Ev::Click, move |_| Msg::ToggleNavBarHamburgerView),
     ]
 }

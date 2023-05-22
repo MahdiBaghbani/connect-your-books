@@ -1,5 +1,6 @@
-use ::entity::{devices, devices::Entity as Device, users, users::Entity as User};
 use sea_orm::*;
+
+use ::entity::{devices, devices::Entity as Device, users, users::Entity as User};
 
 pub struct Query;
 

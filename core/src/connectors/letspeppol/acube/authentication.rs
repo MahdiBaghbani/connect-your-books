@@ -2,7 +2,7 @@ use std::error::Error;
 use std::fs;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use base64::{engine::general_purpose, Engine as _};
+use base64::{Engine as _, engine::general_purpose};
 use reqwest::{Response, StatusCode};
 use reqwest_middleware::ClientWithMiddleware;
 use serde::{Deserialize, Serialize};

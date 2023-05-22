@@ -28,8 +28,8 @@ impl Mutation {
             anti_theft_status: Set("not_detected".to_owned()),
             ..Default::default()
         }
-        .insert(database_connection)
-        .await
+            .insert(database_connection)
+            .await
     }
 
     pub async fn create_user(
@@ -45,8 +45,8 @@ impl Mutation {
             level: Set(level.to_owned()),
             ..Default::default()
         }
-        .insert(database_connection)
-        .await
+            .insert(database_connection)
+            .await
     }
 
     pub async fn update_anti_theft_enable_by_mac_address(

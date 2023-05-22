@@ -3,7 +3,7 @@
 // but some rules are too "annoying" or are not applicable for your case.)
 #![allow(clippy::wildcard_imports)]
 
-use seed::{prelude::*, *};
+use seed::{*, prelude::*};
 
 use crate::pages::components;
 use crate::pages::components::footer::view_footer;
@@ -34,15 +34,15 @@ fn init(url: Url, orders: &mut impl Orders<Msg>) -> Model {
         base_url: url.to_hash_base_url(),
         page: Pages::init(url.clone(), orders),
         is_dark_mode: false,
-        navigation_bar: init_navigation_bar(url.to_hash_base_url()),
-        navigation_bar_active_item_id: init_active_navigation_bar_item_id(url),
-        navigation_bar_mobile_menu_visible: false,
+        navbar: init_navbar(url.to_hash_base_url()),
+        navbar_active_item_id: init_active_navbar_item_id(url),
+        navbar_hamburger_menu_visible: false,
         profile_menu: init_profile_menu(),
         profile_menu_visible: false,
     }
 }
 
-fn init_navigation_bar(base_url: Url) -> Vec<NavigationItem> {
+fn init_navbar(base_url: Url) -> Vec<NavigationItem> {
     vec![
         NavigationItem {
             id: 0,
@@ -72,7 +72,7 @@ fn init_navigation_bar(base_url: Url) -> Vec<NavigationItem> {
     ]
 }
 
-fn init_active_navigation_bar_item_id(mut url: Url) -> u8 {
+fn init_active_navbar_item_id(mut url: Url) -> u8 {
     match url.remaining_hash_path_parts().as_slice() {
         [] => 10,
         [DASHBOARD] => 0,
@@ -114,9 +114,9 @@ pub struct Model {
     base_url: Url,
     page: Pages,
     is_dark_mode: bool,
-    navigation_bar: Vec<NavigationItem>,
-    navigation_bar_active_item_id: u8,
-    navigation_bar_mobile_menu_visible: bool,
+    navbar: Vec<NavigationItem>,
+    navbar_active_item_id: u8,
+    navbar_hamburger_menu_visible: bool,
     profile_menu: Vec<NavigationItem>,
     profile_menu_visible: bool,
 }
@@ -214,8 +214,8 @@ impl<'a> Urls<'a> {
 pub enum Msg {
     UrlChanged(subs::UrlChanged),
     ToggleDarkMode,
-    ChangeNavigationBarActiveItem(u8),
-    ToggleNavigationBarMobileView,
+    ChangeNavBarActiveItem(u8),
+    ToggleNavBarHamburgerView,
     ToggleProfileMenu,
     HideProfileMenu,
 
@@ -231,12 +231,12 @@ pub enum Msg {
 // `update` describes how to handle each `Msg`.
 fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
     match msg {
-        Msg::ChangeNavigationBarActiveItem(id) => {
-            model.navigation_bar_active_item_id = id;
+        Msg::ChangeNavBarActiveItem(id) => {
+            model.navbar_active_item_id = id;
         }
         Msg::ToggleDarkMode => model.is_dark_mode = not(model.is_dark_mode),
-        Msg::ToggleNavigationBarMobileView => {
-            model.navigation_bar_mobile_menu_visible = not(model.navigation_bar_mobile_menu_visible)
+        Msg::ToggleNavBarHamburgerView => {
+            model.navbar_hamburger_menu_visible = not(model.navbar_hamburger_menu_visible)
         }
         Msg::ToggleProfileMenu => {
             model.profile_menu_visible = not(model.profile_menu_visible);
@@ -294,11 +294,7 @@ fn view(model: &Model) -> Vec<Node<Msg>> {
     vec![div![
         IF!(model.is_dark_mode => C!["dark"]),
         C!["min-h-full"],
-        components::navigation_bar::view_navbar(
-            model,
-            &model.base_url,
-            model.ctx.user.as_ref(),
-        ),
+        components::navbar::view_navbar(model, &model.base_url, model.ctx.user.as_ref(),),
         view_content(&model.page),
         view_footer(),
     ]]

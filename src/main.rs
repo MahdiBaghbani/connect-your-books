@@ -1,5 +1,5 @@
+use tracing_subscriber::{EnvFilter, fmt, prelude::*};
 use tracing_subscriber::filter::LevelFilter;
-use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
 fn main() {
     // loads the .env file from the current directory or parents.
