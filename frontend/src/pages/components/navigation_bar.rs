@@ -8,7 +8,7 @@ use seed::{prelude::*, *};
 use crate::components::svg;
 use crate::{Model, Msg, User};
 
-pub fn view_navigation_bar(model: &Model, base_url: &Url, user: Option<&User>) -> Vec<Node<Msg>> {
+pub fn view_navbar(model: &Model, base_url: &Url, user: Option<&User>) -> Vec<Node<Msg>> {
     vec![nav![
         C![
             "bg-white",
@@ -22,104 +22,164 @@ pub fn view_navigation_bar(model: &Model, base_url: &Url, user: Option<&User>) -
             "border-gray-200",
             "dark:border-gray-600"
         ],
-        view_navigation_bar_desktop(model, base_url, user),
-        view_navigation_bar_mobile_menu(model, base_url, user),
+        view_navbar_main(model, base_url, user),
     ]]
 }
 
-fn view_navigation_bar_desktop(model: &Model, base_url: &Url, user: Option<&User>) -> Node<Msg> {
+fn view_navbar_main(model: &Model, base_url: &Url, user: Option<&User>) -> Node<Msg> {
     div![
-        C!["mx-auto", "max-w-7xl", "px-4", "sm:px-6", "lg:px-8"],
-        div![
-            C!["flex", "h-16", "items-center", "justify-between"],
-            view_left_side(model, base_url, user),
-            view_right_side(model, base_url, user),
-            view_navigation_bar_mobile(model, base_url, user),
+        C![
+            "max-w-screen-xl",
+            "flex",
+            "flex-wrap",
+            "items-center",
+            "justify-between",
+            "mx-auto p-4"
+        ],
+        view_navbar_left(base_url),
+        view_navbar_right(model, user),
+        // middle section should be last item here do not move it up or down!
+        IF!(user.is_some()=>view_navbar_middle(model))
+    ]
+}
+
+fn view_navbar_left(base_url: &Url) -> Node<Msg> {
+    // ------ Logo ------
+    a![
+        C!["flex", "items-center"],
+        attrs! {
+            At::Href => base_url,
+        },
+        img![
+            C!["h-8", "mr-3"],
+            attrs! {
+                At::Src => "/assets/images/logo.svg",
+                At::Alt => "Connect Your Books Logo"
+            }
+        ],
+        span![
+            C![
+                "self-center",
+                "text-2xl",
+                "font-semibold",
+                "whitespace-nowrap",
+                "dark:text-white"
+            ],
+            "CYB"
+        ]
+    ]
+}
+
+fn view_navbar_middle(model: &Model) -> Node<Msg> {
+    // ------ Navigation Bar Items ------
+    div![
+        IF!(!model.navigation_bar_mobile_menu_visible => C!["hidden"]),
+        C![
+            "items-center",
+            "justify-between",
+            "w-full",
+            "md:order-1",
+            "md:flex",
+            "md:w-auto",
+            "md:block"
+        ],
+        ul![
+            C![
+                "flex",
+                "flex-col",
+                "p-4",
+                "md:p-0",
+                "mt-4",
+                "font-medium",
+                "border",
+                "border-gray-100",
+                "rounded-lg",
+                "bg-gray-50",
+                "md:flex-row",
+                "md:space-x-8",
+                "md:mt-0",
+                "md:border-0",
+                "md:bg-white",
+                "dark:bg-gray-800",
+                "md:dark:bg-gray-900",
+                "dark:border-gray-700"
+            ],
+            model.navigation_bar.iter().map(|item| {
+                let id: u8 = item.id;
+                a![
+                    C!["block", "py-2", "pl-3", "pr-4", "rounded"],
+                    if id == model.navigation_bar_active_item_id {
+                        C![
+                            "text-white",
+                            "bg-blue-700",
+                            "md:bg-transparent",
+                            "md:text-blue-700",
+                            "md:p-0",
+                            "md:dark:text-blue-500"
+                        ]
+                    } else {
+                        C![
+                            "text-gray-900",
+                            "hover:bg-gray-100",
+                            "md:hover:bg-transparent",
+                            "md:hover:text-blue-700",
+                            "md:p-0",
+                            "md:dark:hover:text-blue-500",
+                            "dark:text-white",
+                            "dark:hover:bg-gray-700",
+                            "dark:hover:text-white",
+                            "md:dark:hover:bg-transparent",
+                            "dark:border-gray-700"
+                        ]
+                    },
+                    attrs! {At::Href => format!("{}", item.href)},
+                    format!("{}", item.name),
+                    ev(Ev::Click, move |_| Msg::ChangeNavigationBarActiveItem(id)),
+                ]
+            }),
         ],
     ]
 }
 
-fn view_left_side(model: &Model, base_url: &Url, user: Option<&User>) -> Node<Msg> {
+fn view_navbar_right(model: &Model, user: Option<&User>) -> Node<Msg> {
     div![
-        C!["flex", "items-center"],
-        // ------ Logo ------
-        div![
-            C!["flex-shrink-0"],
-            a![
-                attrs! {
-                    At::Href => base_url,
-                },
-                img![
-                    C!["h-8", "w-8"],
-                    attrs! {
-                        At::Src => "/assets/images/logo.svg",
-                        At::Alt => "Ponder Source"
-                    }
-                ],
-            ],
-        ],
-        if user.is_some() {
-            // ------ Navigation Bar Items ------
-            div![
-                C!["hidden", "md:block"],
-                div![
-                    C!["ml-10", "flex", "items-baseline", "space-x-4"],
-                    model.navigation_bar.iter().map(|item| {
-                        let id: u8 = item.id;
-                        a![
-                            if id == model.navigation_bar_active_item_id {
-                                C!["bg-gray-900", "text-white"]
-                            } else {
-                                C!["text-gray-300", "hover:bg-gray-700", "hover:text-white"]
-                            },
-                            C!["rounded-md", "px-3", "py-2", "text-sm", "font-medium"],
-                            attrs! {At::Href => format!("{}", item.href)},
-                            format!("{}", item.name),
-                            ev(Ev::Click, move |_| Msg::ChangeNavigationBarActiveItem(id)),
-                        ]
-                    }),
-                ],
+        C!["flex", "items-center", "md:order-2",],
+        view_dark_mode_button(&model.is_dark_mode),
+        if let Some(_user) = user {
+            vec![
+                view_profile_button(model),
+                view_navigation_bar_mobile_menu_button(&model.navigation_bar_mobile_menu_visible),
             ]
         } else {
-            div![]
+            vec![view_signin_button()]
         },
     ]
 }
 
-fn view_right_side(model: &Model, base_url: &Url, user: Option<&User>) -> Node<Msg> {
-    div![
-        C!["hidden", "md:block"],
-        div![
-            C!["ml-4", "flex", "items-center", "md:ml-6"],
-            view_light_dark_mode_switch_button(&model.is_dark_mode),
-            if let Some(user) = user {
-                view_profile_button(model, base_url, user)
-            } else {
-                view_signin_button(model, base_url)
-            }
-        ],
-    ]
-}
-
-fn view_light_dark_mode_switch_button(is_dark_mode: &bool) -> Node<Msg> {
+fn view_dark_mode_button(is_dark_mode: &bool) -> Node<Msg> {
     button![
         C![
-            "text-gray-500",
-            "dark:text-gray-400",
-            "hover:bg-gray-100",
-            "dark:hover:bg-gray-700",
-            "rounded-lg",
-            "text-sm",
-            "p-2.5",
             "inline-flex",
-            "items-center"
+            "items-center",
+            "p-2",
+            "ml-3",
+            "text-sm",
+            "text-gray-500",
+            "rounded-lg",
+            "hover:bg-gray-100",
+            "focus:outline-none",
+            "focus:ring-2",
+            "focus:ring-gray-200",
+            "dark:text-gray-400",
+            "dark:hover:bg-gray-700",
+            "dark:focus:ring-gray-600"
         ],
         attrs! {
             At::Type=>"button",
         },
         span![C!["sr-only"], "Light mode, dark mode switch button"],
         svg![
-            C!["w-5", "h-5"],
+            C!["w-6", "h-6"],
             attrs! {
                 At::Xmlns=>"http://www.w3.org/2000/svg",
                 At::ViewBox=>"0 0 20 20",
@@ -142,20 +202,20 @@ fn view_light_dark_mode_switch_button(is_dark_mode: &bool) -> Node<Msg> {
     ]
 }
 
-fn view_profile_button(model: &Model, base_url: &Url, user: &User) -> Node<Msg> {
+fn view_profile_button(model: &Model) -> Node<Msg> {
     div![
-        C!["relative", "ml-3"],
-        div![button![
+        C!["relative"],
+        button![
             C![
                 "flex",
-                "mr-3",
+                "ml-3",
                 "text-sm",
                 "bg-gray-800",
                 "rounded-lg",
                 "md:mr-0",
                 "focus:ring-4",
                 "focus:ring-gray-300",
-                "dark:focus:ring-gray-600"
+                "dark:focus:ring-gray-600",
             ],
             attrs! {
                 At::Type=>"button",
@@ -165,7 +225,7 @@ fn view_profile_button(model: &Model, base_url: &Url, user: &User) -> Node<Msg> 
             },
             span![C!["sr-only"], "Open user menu"],
             img![
-                C!["h-8", "w-8", "rounded-lg"],
+                C!["h-10", "w-10", "rounded-lg"],
                 attrs! {
                     At::Src=>"/assets/images/profile-mahdi-baghbani.avif",
                     At::Alt=>"profile picture"
@@ -176,76 +236,86 @@ fn view_profile_button(model: &Model, base_url: &Url, user: &User) -> Node<Msg> 
                 event.stop_propagation();
                 Msg::ToggleProfileMenu
             }),
-        ],],
-        // ------ Profile dropdown ------
-        IF!(model.profile_menu_visible =>
-            div![
-                C![
-                    "absolute",
-                    "right-0",
-                    "z-10",
-                    "mt-2",
-                    "w-48",
-                    "origin-top-right",
-                    "rounded-md",
-                    "bg-white",
-                    "py-1",
-                    "shadow-lg",
-                    "ring-1",
-                    "ring-black",
-                    "ring-opacity-5",
-                    "focus:outline-none"
-                ],
-                attrs! {
-                    At::Role=>"menu",
-                    At::TabIndex=>"-1",
-                    At::AriaLabelledBy=>"user-menu-button"
-                },
-                model.profile_menu.iter().map(|item| {
-                    let id: u8 = item.id;
-                    a![
-                        C!["block", "px-4", "py-2", "text-sm", "text-gray-700"],
-                        attrs! {
-                            At::Id=>format!("user-menu-item-{}", id),
-                            At::Href => format!("{}", item.href),
-                            At::Role=>"menuitem", At::TabIndex=>"-1"
-                        },
-                        format!("{}", item.name),
-                    ]
-                }),
-            ]
-        ),
+        ],
+        IF!(model.profile_menu_visible=>view_profile_dropdown(model)),
     ]
 }
 
-fn view_signin_button(model: &Model, base_url: &Url) -> Node<Msg> {
+fn view_profile_dropdown(model: &Model) -> Node<Msg> {
+    div![
+        C![
+            "absolute",
+            "right-0",
+            "z-10",
+            "mt-2",
+            "w-48",
+            "origin-top-right",
+            "rounded-md",
+            "bg-white",
+            "py-1",
+            "shadow-lg",
+            "ring-1",
+            "ring-black",
+            "ring-opacity-5",
+            "focus:outline-none",
+            "dark:bg-gray-700",
+            "dark:divide-gray-600"
+        ],
+        attrs! {
+            At::Role=>"menu",
+            At::TabIndex=>"-1",
+            At::AriaLabelledBy=>"user-menu-button"
+        },
+        ul![
+            C!["py-2"],
+            model.profile_menu.iter().map(|item| {
+                let id: u8 = item.id;
+                li![a![
+                    C![
+                        "block",
+                        "px-4",
+                        "py-2",
+                        "text-sm",
+                        "text-gray-700",
+                        "hover:bg-gray-100",
+                        "dark:hover:bg-gray-600",
+                        "dark:text-gray-200",
+                        "dark:hover:text-white"
+                    ],
+                    attrs! {
+                        At::Id=>format!("user-menu-item-{}", id),
+                        At::Href => format!("{}", item.href),
+                        At::Role=>"menuitem", At::TabIndex=>"-1"
+                    },
+                    format!("{}", item.name),
+                ]]
+            }),
+        ],
+    ]
+}
+
+fn view_signin_button() -> Node<Msg> {
     button![
         C![
             "text-white",
             "bg-blue-700",
             "hover:bg-blue-800",
-            "font-medium rounded-lg",
+            "focus:ring-4",
+            "focus:outline-none",
+            "focus:ring-blue-300,"
+            "font-medium",
+            "rounded-lg",
             "text-sm",
             "px-3",
             "py-2.5",
-            "m-2",
+            "text-center",
+            "ml-3",
             "rounded-lg",
             "dark:bg-blue-600",
-            "dark:hover:bg-blue-700"
+            "dark:hover:bg-blue-700",
+            "dark:focus:ring-blue-800"
         ],
         "Sign in"
-    ]
-}
-
-fn view_navigation_bar_mobile(model: &Model, base_url: &Url, user: Option<&User>) -> Node<Msg> {
-    div![
-        C!["-mr-2", "flex", "md:hidden"],
-        view_light_dark_mode_switch_button(&model.is_dark_mode),
-        if user.is_some() {
-            view_navigation_bar_mobile_menu_button(&model.navigation_bar_mobile_menu_visible)
-        } else {
-            view_signin_button(model, base_url)
-        },
     ]
 }
 
@@ -259,6 +329,7 @@ fn view_navigation_bar_mobile_menu_button(visible: &bool) -> Node<Msg> {
             "text-sm",
             "text-gray-500",
             "rounded-lg",
+            "md:hidden",
             "hover:bg-gray-100",
             "focus:outline-none",
             "focus:ring-2",
@@ -304,87 +375,5 @@ fn view_navigation_bar_mobile_menu_button(visible: &bool) -> Node<Msg> {
             ],
         ],
         ev(Ev::Click, move |_| Msg::ToggleNavigationBarMobileView),
-    ]
-}
-
-fn view_navigation_bar_mobile_menu(
-    model: &Model,
-    base_url: &Url,
-    user: Option<&User>,
-) -> Node<Msg> {
-    div![
-        C!["md:hidden"],
-        attrs! {At::Id=>"mobile-menu"},
-        IF!(not(model.navigation_bar_mobile_menu_visible) => style!{St::Display => "none"}),
-        div![
-            C!["space-y-1", "px-2", "pb-3", "pt-2", "sm:px-3"],
-            model.navigation_bar.iter().map(|item| {
-                let id: u8 = item.id;
-                a![
-                    if id == model.navigation_bar_active_item_id {
-                        C!["bg-gray-900", "text-white"]
-                    } else {
-                        C!["text-gray-300", "hover:bg-gray-700", "hover:text-white"]
-                    },
-                    C![
-                        "block",
-                        "rounded-md",
-                        "px-3",
-                        "py-2",
-                        "text-base",
-                        "font-medium"
-                    ],
-                    attrs! {At::Href => format!("{}", item.href)},
-                    format!("{}", item.name),
-                    ev(Ev::Click, move |_| Msg::ChangeNavigationBarActiveItem(id)),
-                ]
-            }),
-        ],
-        div![
-            C!["border-t", "border-gray-700", "pb-3", "pt-4"],
-            div![
-                C!["flex", "items-center", "px-5"],
-                div![
-                    C!["flex-shrink-0"],
-                    img![
-                        C!["h-10", "w-10", "rounded"],
-                        attrs! {
-                            At::Src=>"/assets/images/profile-mahdi-baghbani.avif",
-                            At::Alt=>"profile picture"
-                        }
-                    ],
-                ],
-                div![
-                    C!["ml-3"],
-                    div![
-                        C!["text-base", "font-medium", "leading-none", "text-white"],
-                        "Tom Cook"
-                    ],
-                    div![
-                        C!["text-sm", "font-medium", "leading-none", "text-gray-400"],
-                        "tom@example.com"
-                    ],
-                ],
-            ],
-            div![
-                C!["mt-3", "space-y-1", "px-2"],
-                model.profile_menu.iter().map(|item| {
-                    a![
-                        C![
-                            "block",
-                            "rounded-md",
-                            "px-3",
-                            "py-2",
-                            "text-base",
-                            "font-medium",
-                            "text-gray-400",
-                            "hover:bg-gray-700",
-                            "hover:text-white"
-                        ],
-                        format!("{}", item.name),
-                    ]
-                }),
-            ],
-        ],
     ]
 }

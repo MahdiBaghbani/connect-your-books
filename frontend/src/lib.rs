@@ -27,10 +27,7 @@ fn init(url: Url, orders: &mut impl Orders<Msg>) -> Model {
         .stream(streams::window_event(Ev::Click, |_| Msg::HideProfileMenu));
     Model {
         ctx: Context {
-            user: Some(User {
-                username: "Mahdi".to_string(),
-                email: "mahdi.baghbani1@gmail.com".to_string(),
-            }),
+            user: None,
             token: None,
         },
 
@@ -297,7 +294,7 @@ fn view(model: &Model) -> Vec<Node<Msg>> {
     vec![div![
         IF!(model.is_dark_mode => C!["dark"]),
         C!["min-h-full"],
-        components::navigation_bar::view_navigation_bar(
+        components::navigation_bar::view_navbar(
             model,
             &model.base_url,
             model.ctx.user.as_ref(),
