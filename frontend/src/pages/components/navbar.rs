@@ -3,10 +3,10 @@
 // but some rules are too "annoying" or are not applicable for your case.)
 #![allow(clippy::wildcard_imports)]
 
-use seed::{*, prelude::*};
+use seed::{prelude::*, *};
 
-use crate::{Model, Msg, User};
 use crate::components::svg;
+use crate::{Model, Msg, User};
 
 pub fn view_navbar(model: &Model, base_url: &Url, user: Option<&User>) -> Vec<Node<Msg>> {
     vec![nav![
@@ -261,6 +261,23 @@ fn view_profile_dropdown(model: &Model) -> Node<Msg> {
             At::TabIndex=>"-1",
             At::AriaLabelledBy=>"user-menu-button"
         },
+        div![
+            C!["px-4", "py-3"],
+            span![
+                C!["block", "text-sm", "text-gray-900", "dark:text-white"],
+                "Michiel de jong"
+            ],
+            span![
+                C![
+                    "block",
+                    "text-sm",
+                    "text-gray-500",
+                    "truncate",
+                    "dark:text-gray-400"
+                ],
+                "michiel@ponder.org"
+            ],
+        ],
         ul![
             C!["py-2"],
             model.profile_menu.iter().map(|item| {
