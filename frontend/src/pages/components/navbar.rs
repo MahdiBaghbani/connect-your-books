@@ -3,10 +3,10 @@
 // but some rules are too "annoying" or are not applicable for your case.)
 #![allow(clippy::wildcard_imports)]
 
-use seed::{prelude::*, *};
+use seed::{*, prelude::*};
 
-use crate::components::svg;
 use crate::{Model, Msg, User};
+use crate::components::svg;
 
 pub fn view_navbar(model: &Model, base_url: &Url, user: Option<&User>) -> Vec<Node<Msg>> {
     vec![nav![

@@ -37,12 +37,15 @@ nvm list
 ```bash
 npm install -D tailwindcss
 ```
+
 install plugins:
+
 ```bash
 npm install -D @tailwindcss/forms 
 ```
 
 run:
+
 ```bash
 NODE_ENV=production npx --yes tailwindcss -c ./tailwind.config.js -o ./public/tailwind.css --minify
 ```

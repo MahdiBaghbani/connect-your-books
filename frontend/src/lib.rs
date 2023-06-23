@@ -3,7 +3,7 @@
 // but some rules are too "annoying" or are not applicable for your case.)
 #![allow(clippy::wildcard_imports)]
 
-use seed::{*, prelude::*};
+use seed::{prelude::*, *};
 
 use crate::pages::components;
 use crate::pages::components::footer::view_footer;
@@ -304,7 +304,7 @@ fn view(model: &Model) -> Vec<Node<Msg>> {
 
 fn view_content(page: &Pages) -> Vec<Node<Msg>> {
     match page {
-        Pages::Home(model) => pages::home::view().map_msg(Msg::HomeMsg),
+        Pages::Home(model) => pages::home::view(model).map_msg(Msg::HomeMsg),
         Pages::Dashboard(model) => pages::dashboard::view().map_msg(Msg::DashboardMsg),
         Pages::Team(model) => pages::team::view().map_msg(Msg::TeamMsg),
         Pages::Projects(model) => pages::projects::view().map_msg(Msg::ProjectsMsg),
