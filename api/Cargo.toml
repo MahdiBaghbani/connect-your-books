@@ -10,11 +10,11 @@ path = "src/lib.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
-core = { path = "../core" }
+modules = { path = "../modules" }
 database = { path = "../database" }
 entity = { path = "../database/entity" }
 migration = { path = "../database/migration" }
-salvo = { version = "0.45", features = ["compression", "logging", "serve-static"] }
+salvo = { version = "0.45", features = ["caching-headers", "compression", "cors", "logging", "oapi", "serve-static"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tokio = { version = "1.28", features = ["macros", "rt-multi-thread"] }
