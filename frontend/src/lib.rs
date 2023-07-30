@@ -319,8 +319,9 @@ fn view_content(page: &Pages) -> Vec<Node<Msg>> {
 // ------ ------
 
 // (This function is invoked by `init` function in `index.html`.)
-#[wasm_bindgen(start)]
-pub fn start() {
+// #[wasm_bindgen(start)]
+// above line is not necessary since trunk v0.17, remained here as a reference.
+pub fn main() {
     // Mount the `app` to the element with the `id` "app".
     App::start("app", init, update, view);
 }
