@@ -2,7 +2,12 @@
 target = "index.html"
 dist = "dist"
 
+# for Linux:
 [[hooks]]
 stage = "post_build"
 command = "sh"
 command_arguments = ["-c", "NODE_ENV=production npx --yes tailwindcss -c ./tailwind.config.js -o $TRUNK_STAGING_DIR/tailwind.css --minify"]
+
+# for Windows:
+# run manualy after build.
+# $env:NODE_ENV="production"; npx --yes tailwindcss -c path\to\tailwind.config.js -o path\to\dist\tailwind.css --minify
