@@ -4,15 +4,13 @@ use salvo::compression::Compression;
 use salvo::conn::tcp::TcpAcceptor;
 use salvo::cors::Cors;
 use salvo::http::Method;
-use salvo::oapi::extract::*;
 use salvo::prelude::*;
 use salvo::serve_static::StaticDir;
 
 mod users;
 
-#[endpoint]
-async fn hello(name: QueryParam<String, false>) -> String {
-    format!("Hello, {}!", name.as_deref().unwrap_or("World"))
+fn api_router() -> Router {
+    Router::new().path("api").push(users::router())
 }
 
 #[tokio::main]
@@ -54,7 +52,7 @@ pub async fn run() {
         .options(handler::empty());
 
     // push paths into the basic router.
-    let router: Router = router.push(Router::new().path("hello").get(hello));
+    let router: Router = router.push(api_router());
 
     // create api documentation from routes.
     let doc: OpenApi = OpenApi::new("Connect Your Books API", "0.0.1").merge_router(&router);
