@@ -1,3 +1,17 @@
+### **Setup Trunk and WASM build environment**
+
+```bash
+cargo install --locked trunk
+```
+
+```bash
+rustup target add wasm32-unknown-unknown
+```
+_below line is not necessary, but it's nice to have this cli tool_
+```bash
+cargo install --locked wasm-bindgen-cli
+```
+
 ### **Install Node.js**
 
 [Digital Ocean guide for Ubuntu 22.04.](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-22-04)
@@ -35,19 +49,22 @@ nvm list
 ### **Install Tailwind CSS**
 
 ```bash
-npm install -D tailwindcss
+npm install --save-dev tailwindcss
 ```
 
 install plugins:
 
 ```bash
-npm install -D @tailwindcss/forms 
+npm install --save-dev @tailwindcss/forms 
+```
+
+```bash
+npm install --save-dev cross-env
 ```
 
 run:
-
 ```bash
-NODE_ENV=production npx --yes tailwindcss -c ./tailwind.config.js -o ./public/tailwind.css --minify
+cross-env NODE_ENV=production npx --yes tailwindcss -c ./tailwind.config.js -o ./public/tailwind.css --minify
 ```
 
 above command will automatically execute by ``trunk`` because it is
