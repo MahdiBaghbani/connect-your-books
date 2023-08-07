@@ -3,21 +3,6 @@ name = "frontend"
 version = "0.1.0"
 edition = "2021"
 
-[[bin]]
-# It looks like Trunk, unlike wasm-pack, doesn't require it to be a library.
-# The Trunk documentation even states: "The easiest way to ensure that your application launches
-# properly is to setup your app as an executable with a standard main function"
-# https://trunkrs.dev/
-name = "frontend"
-path = "src/lib.rs"
-
-[lib]
-# cdylib stands for "C dynamic library" — a WASM module is kind of like a dynamic library, and
-# "C" should be understood as just meaning "native format, no Rust-specific conventions".
-# In order to get a .wasm file, you must request a crate-type of cdylib in your configuration
-# and this is also standard when using wasm-pack
-crate-type = ["lib", "cdylib"]
-
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 chrono = "0.4"
