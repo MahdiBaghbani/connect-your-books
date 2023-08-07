@@ -49,7 +49,7 @@ fn view_navbar_left(base_url: &Url) -> Node<Msg> {
         img![
             C!["h-8", "mr-3"],
             attrs! {
-                At::Src => "/assets/images/logo.svg",
+                At::Src => "/assets/icons/logo.svg",
                 At::Alt => "Connect Your Books Logo"
             }
         ],

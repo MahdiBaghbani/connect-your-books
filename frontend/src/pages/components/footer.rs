@@ -31,7 +31,7 @@ pub fn view_footer() -> Vec<Node<Msg>> {
                 img![
                     C!["mr-2", "h-8"],
                     attrs! {
-                        At::Src=>"/assets/images/logo.svg",
+                        At::Src=>"/assets/icons/logo.svg",
                         At::Alt=>"Ponder Source Logo"
                     }
                 ],

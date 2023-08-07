@@ -66,7 +66,7 @@ pub fn view_feature_list() -> Node<Msg> {
                             "dark:bg-primary-900"
                         ],
                         img![attrs! {
-                            At::Src=>"/assets/images/logo.svg"
+                            At::Src=>"/assets/icons/logo.svg"
                         }]
                     ],
                     h3![
@@ -96,7 +96,7 @@ pub fn view_feature_list() -> Node<Msg> {
                             "dark:bg-primary-900"
                         ],
                         img![attrs! {
-                            At::Src=>"/assets/images/logo.svg"
+                            At::Src=>"/assets/icons/logo.svg"
                         }]
                     ],
                     h3![
@@ -126,7 +126,7 @@ pub fn view_feature_list() -> Node<Msg> {
                             "dark:bg-primary-900"
                         ],
                         img![attrs! {
-                            At::Src=>"/assets/images/logo.svg"
+                            At::Src=>"/assets/icons/logo.svg"
                         }]
                     ],
                     h3![
@@ -156,7 +156,7 @@ pub fn view_feature_list() -> Node<Msg> {
                             "dark:bg-primary-900"
                         ],
                         img![attrs! {
-                            At::Src=>"/assets/images/logo.svg"
+                            At::Src=>"/assets/icons/logo.svg"
                         }]
                     ],
                     h3![
@@ -186,7 +186,7 @@ pub fn view_feature_list() -> Node<Msg> {
                             "dark:bg-primary-900"
                         ],
                         img![attrs! {
-                            At::Src=>"/assets/images/logo.svg"
+                            At::Src=>"/assets/icons/logo.svg"
                         }]
                     ],
                     h3![
@@ -216,7 +216,7 @@ pub fn view_feature_list() -> Node<Msg> {
                             "dark:bg-primary-900"
                         ],
                         img![attrs! {
-                            At::Src=>"/assets/images/logo.svg"
+                            At::Src=>"/assets/icons/logo.svg"
                         }]
                     ],
                     h3![
