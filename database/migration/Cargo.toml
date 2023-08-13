@@ -14,4 +14,4 @@ path = "src/lib.rs"
 # View the list of supported features at
 # https://www.sea-ql.org/SeaORM/docs/install-and-config/database-and-async-runtime.
 async-std = { version = "1.12", features = ["attributes", "tokio1"] }
-sea-orm-migration = { version = "0.11", features = ["runtime-tokio-rustls", "sqlx-postgres"] }
+sea-orm-migration = { version = "0.12", features = ["runtime-tokio-rustls", "sqlx-postgres"] }
