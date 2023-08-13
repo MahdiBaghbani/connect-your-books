@@ -2,12 +2,12 @@ version: "3.0"
 
 services:
   postgres:
-    image: "postgres:14.5-bullseye"
+    image: "postgres:15-bullseye"
     security_opt:
       - no-new-privileges:true
     environment:
-      POSTGRES_DB: "wiki"
-      POSTGRES_PASSWORD: "wikijsrocks"
-      POSTGRES_USER: "wikijs"
+      POSTGRES_DB: "cyb"
+      POSTGRES_PASSWORD: "cyb"
+      POSTGRES_USER: "cyb"
     ports:
       - "5432:5432"
