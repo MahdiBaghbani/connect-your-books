@@ -12,9 +12,9 @@ pub struct Config {
 
 #[derive(Debug)]
 pub struct ConfigDatabase {
+    pub kind: String,
     pub host: String,
     pub port: String,
-    pub kind: String,
     pub name: String,
     pub user: String,
     pub pass: String,
@@ -53,10 +53,14 @@ impl Config {
         }
     }
 
-    pub fn url(&self) -> String {
+    pub fn url_api(&self) -> String {
         let host: String = self.host.clone();
         let port: String = self.port.clone();
         format!("{host}:{port}")
+    }
+
+    pub fn url_database(&self) -> String {
+        self.database.url()
     }
 }
 
@@ -67,21 +71,32 @@ impl Default for ConfigDatabase {
 }
 impl ConfigDatabase {
     pub fn new() -> Self {
+        let kind: String = env::var("CYB_DB_KIND").expect("CYB_DB_KIND is not set in .env file");
         let host: String = env::var("CYB_DB_HOST").expect("CYB_DB_HOST is not set in .env file");
         let port: String = env::var("CYB_DB_PORT").expect("CYB_DB_PORT is not set in .env file");
-        let kind: String = env::var("CYB_DB_KIND").expect("CYB_DB_KIND is not set in .env file");
         let name: String = env::var("CYB_DB_NAME").expect("CYB_DB_NAME is not set in .env file");
         let user: String = env::var("CYB_DB_USER").expect("CYB_DB_USER is not set in .env file");
         let pass: String = env::var("CYB_DB_PASS").expect("CYB_DB_PASS is not set in .env file");
 
         ConfigDatabase {
+            kind,
             host,
             port,
-            kind,
             name,
             user,
             pass,
         }
+    }
+
+    pub fn url(&self) -> String {
+        let kind: String = self.kind.clone();
+        let host: String = self.host.clone();
+        let port: String = self.port.clone();
+        let name: String = self.name.clone();
+        let user: String = self.user.clone();
+        let pass: String = self.pass.clone();
+
+        format!("{kind}://{user}:{pass}@{host}:{port}/{name}")
     }
 }
 
