@@ -6,7 +6,7 @@ publish = false
 
 [lib]
 name = "entity"
-path = "src/lib.rs"
+path = "src/mod.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
@@ -15,3 +15,4 @@ path = "src/lib.rs"
 # https://www.sea-ql.org/SeaORM/docs/install-and-config/database-and-async-runtime.
 sea-orm = { version = "0.12", features = ["runtime-tokio-rustls", "sqlx-postgres", "macros"] }
 serde = { version = "1.0", features = ["derive"] }
+uuid = { version = "1.4", features = ["v4"] }

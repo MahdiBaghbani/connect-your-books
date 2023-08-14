@@ -1,6 +1,3 @@
-use std::env;
-
-use crate::config::Config;
 use salvo::compression::Compression;
 use salvo::conn::tcp::TcpAcceptor;
 use salvo::cors::Cors;
@@ -8,8 +5,21 @@ use salvo::http::Method;
 use salvo::prelude::*;
 use salvo::serve_static::StaticDir;
 
+use database::{
+    sea_orm::{Database, DatabaseConnection},
+    Mutation, Query,
+};
+use migration::{Migrator, MigratorTrait};
+
 mod config;
 mod users;
+
+use config::Config;
+
+#[derive(Debug, Clone)]
+struct AppState {
+    conn: DatabaseConnection,
+}
 
 fn api_router() -> Router {
     Router::new().path("api").push(users::router())
@@ -31,7 +41,7 @@ pub async fn run() {
         .force_priority(true);
 
     let cors_handler = Cors::new()
-        .allow_origin(&config.url())
+        .allow_origin(&config.url_api())
         .allow_methods(vec![Method::GET, Method::POST, Method::DELETE])
         .into_handler();
 
@@ -63,6 +73,10 @@ pub async fn run() {
         ),
     );
 
-    let acceptor: TcpAcceptor = TcpListener::new(config.url()).bind().await;
+    // connect to database.
+    let conn: DatabaseConnection = Database::connect(&config.url_database()).await.unwrap();
+    Migrator::up(&conn, None).await.unwrap();
+
+    let acceptor: TcpAcceptor = TcpListener::new(config.url_api()).bind().await;
     Server::new(acceptor).serve(router).await;
 }
