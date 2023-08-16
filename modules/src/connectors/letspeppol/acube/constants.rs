@@ -1,5 +1,3 @@
-use std::env;
-
 use serde::{Deserialize, Serialize};
 
 use crate::utility::env_utils::get_env_var;
