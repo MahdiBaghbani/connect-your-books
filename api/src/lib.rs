@@ -34,14 +34,6 @@ pub async fn run() {
     // push routers into the middlewares.
     let router: Router = routers::setup(middlewares);
 
-    // create api documentation from routes.
-    let doc: OpenApi = OpenApi::new("Connect Your Books API", "0.0.1").merge_router(&router);
-
-    // push api documentation and swagger into router.
-    let router: Router = router
-        .push(doc.into_router("/api/doc/openapi.json"))
-        .push(SwaggerUi::new("/api/doc/openapi.json").into_router("swagger-ui"));
-
     // push frontend static files to root of url.
     let router: Router = router.push(
         Router::new().path("<**rest_path>").get(
