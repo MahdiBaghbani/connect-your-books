@@ -11,15 +11,12 @@ use migration::{Migrator, MigratorTrait};
 
 mod configs;
 mod middlewares;
+mod routers;
 mod schemas;
 mod users;
 
 use configs::Config;
 use schemas::{AppState, JwtClaims};
-
-fn api_router() -> Router {
-    Router::new().path("api").push(users::router())
-}
 
 #[tokio::main]
 pub async fn run() {
@@ -35,10 +32,11 @@ pub async fn run() {
     // global app state.
     let state: AppState = AppState { db_connection };
 
+    // setup all required middlewares.
     let middlewares: Router = middlewares::setup(state, &config);
 
-    // push paths into the basic router.
-    let router: Router = middlewares.push(api_router());
+    // push routers into the middlewares.
+    let router: Router = routers::setup(middlewares);
 
     // create api documentation from routes.
     let doc: OpenApi = OpenApi::new("Connect Your Books API", "0.0.1").merge_router(&router);
