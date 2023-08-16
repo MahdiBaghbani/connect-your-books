@@ -1,5 +1,12 @@
 use serde::{Deserialize, Serialize};
 
+use database::sea_orm::DatabaseConnection;
+
+#[derive(Debug, Clone)]
+pub struct AppState {
+    pub db_connection: DatabaseConnection,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct SignUpUserSchema {
     pub name_first: String,

@@ -10,16 +10,12 @@ use database::sea_orm::{Database, DatabaseConnection};
 use migration::{Migrator, MigratorTrait};
 
 mod config;
+mod middlewares;
 mod schema;
 mod users;
 
 use config::Config;
-use schema::JwtClaims;
-
-#[derive(Debug, Clone)]
-struct AppState {
-    conn: DatabaseConnection,
-}
+use schema::{AppState, JwtClaims};
 
 fn api_router() -> Router {
     Router::new().path("api").push(users::router())
@@ -30,37 +26,19 @@ pub async fn run() {
     // load application configuration from .env file.
     let config: Config = Config::new();
 
-    // create necessary middlewares.
-    let logger: Logger = Logger::new();
+    // connect to database.
+    let db_connection: DatabaseConnection =
+        Database::connect(&config.url_database()).await.unwrap();
+    // apply all pending migrations.
+    Migrator::up(&db_connection, None).await.unwrap();
 
-    let auth_handler: JwtAuth<JwtClaims, _> =
-        JwtAuth::new(ConstDecoder::from_secret(config.secret_bytes()))
-            .finders(vec![Box::new(HeaderFinder::new())])
-            .force_passed(true);
+    // global app state.
+    let state: AppState = AppState { db_connection };
 
-    let cache: CachingHeaders = CachingHeaders::new();
-
-    let compression: Compression = Compression::new()
-        .disable_all()
-        .enable_brotli(CompressionLevel::Minsize)
-        .force_priority(true);
-
-    let cors_handler = Cors::new()
-        .allow_origin(&config.url_api())
-        .allow_methods(vec![Method::GET, Method::POST, Method::DELETE])
-        .into_handler();
-
-    // create base router with all the middlewares.
-    let router: Router = Router::new()
-        .hoop(logger)
-        .hoop(auth_handler)
-        .hoop(cache)
-        .hoop(compression)
-        .hoop(cors_handler)
-        .options(handler::empty());
+    let middlewares: Router = middlewares::setup(state, &config);
 
     // push paths into the basic router.
-    let router: Router = router.push(api_router());
+    let router: Router = middlewares.push(api_router());
 
     // create api documentation from routes.
     let doc: OpenApi = OpenApi::new("Connect Your Books API", "0.0.1").merge_router(&router);
@@ -78,10 +56,6 @@ pub async fn run() {
                 .listing(true),
         ),
     );
-
-    // connect to database.
-    let conn: DatabaseConnection = Database::connect(&config.url_database()).await.unwrap();
-    Migrator::up(&conn, None).await.unwrap();
 
     let acceptor: TcpAcceptor = TcpListener::new(config.url_api()).bind().await;
     Server::new(acceptor).serve(router).await;
