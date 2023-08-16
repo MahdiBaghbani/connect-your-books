@@ -9,13 +9,13 @@ use salvo::serve_static::StaticDir;
 use database::sea_orm::{Database, DatabaseConnection};
 use migration::{Migrator, MigratorTrait};
 
-mod config;
+mod configs;
 mod middlewares;
-mod schema;
+mod schemas;
 mod users;
 
-use config::Config;
-use schema::{AppState, JwtClaims};
+use configs::Config;
+use schemas::{AppState, JwtClaims};
 
 fn api_router() -> Router {
     Router::new().path("api").push(users::router())

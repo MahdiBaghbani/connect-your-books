@@ -4,8 +4,8 @@ use salvo::http::Method;
 use salvo::jwt_auth::{ConstDecoder, HeaderFinder};
 use salvo::prelude::*;
 
-use crate::config::Config;
-use crate::schema::{AppState, JwtClaims};
+use crate::configs::Config;
+use crate::schemas::{AppState, JwtClaims};
 
 pub fn setup(app_state: AppState, config: &Config) -> Router {
     // create necessary middlewares.
