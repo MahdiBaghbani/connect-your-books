@@ -10,10 +10,13 @@ path = "src/lib.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
+# internal crates.
 database = { path = "../database" }
 entity = { path = "../database/entity" }
 migration = { path = "../database/migration" }
 modules = { path = "../modules" }
+# external crates.
+jsonwebtoken = "8.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tokio = { version = "1.31", features = ["macros", "rt-multi-thread"] }
@@ -26,6 +29,7 @@ features = [
     "caching-headers",
     "compression",
     "cors",
+    "jwt-auth",
     "logging",
     "oapi",
     "serve-static"

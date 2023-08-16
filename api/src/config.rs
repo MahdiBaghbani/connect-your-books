@@ -62,6 +62,10 @@ impl Config {
     pub fn url_database(&self) -> String {
         self.database.url()
     }
+
+    pub fn secret_bytes(&self) -> &[u8] {
+        self.jwt.secret_bytes()
+    }
 }
 
 impl Default for ConfigDatabase {
@@ -120,5 +124,9 @@ impl ConfigJWT {
             max_age: max_age.parse::<i32>().unwrap_or(60),
             expiration_time,
         }
+    }
+
+    pub fn secret_bytes(&self) -> &[u8] {
+        self.secret.as_bytes()
     }
 }

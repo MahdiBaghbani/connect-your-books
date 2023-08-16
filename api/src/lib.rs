@@ -2,19 +2,19 @@ use salvo::compression::Compression;
 use salvo::conn::tcp::TcpAcceptor;
 use salvo::cors::Cors;
 use salvo::http::Method;
+use salvo::jwt_auth::{ConstDecoder, HeaderFinder};
 use salvo::prelude::*;
 use salvo::serve_static::StaticDir;
 
-use database::{
-    sea_orm::{Database, DatabaseConnection},
-    Mutation, Query,
-};
+use database::sea_orm::{Database, DatabaseConnection};
 use migration::{Migrator, MigratorTrait};
 
 mod config;
+mod schema;
 mod users;
 
 use config::Config;
+use schema::JwtClaims;
 
 #[derive(Debug, Clone)]
 struct AppState {
@@ -33,6 +33,11 @@ pub async fn run() {
     // create necessary middlewares.
     let logger: Logger = Logger::new();
 
+    let auth_handler: JwtAuth<JwtClaims, _> =
+        JwtAuth::new(ConstDecoder::from_secret(config.secret_bytes()))
+            .finders(vec![Box::new(HeaderFinder::new())])
+            .force_passed(true);
+
     let cache: CachingHeaders = CachingHeaders::new();
 
     let compression: Compression = Compression::new()
@@ -48,6 +53,7 @@ pub async fn run() {
     // create base router with all the middlewares.
     let router: Router = Router::new()
         .hoop(logger)
+        .hoop(auth_handler)
         .hoop(cache)
         .hoop(compression)
         .hoop(cors_handler)
