@@ -7,7 +7,7 @@ use salvo::prelude::*;
 use crate::configs::Config;
 use crate::schemas::{AppState, JwtClaims};
 
-pub fn setup(app_state: AppState, config: &Config) -> Router {
+pub fn setup(config: &Config, app_state: AppState) -> Router {
     // create necessary middlewares.
     let logger: Logger = Logger::new();
 

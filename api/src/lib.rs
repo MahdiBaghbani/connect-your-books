@@ -1,6 +1,5 @@
 use salvo::conn::tcp::TcpAcceptor;
 use salvo::prelude::*;
-use salvo::serve_static::StaticDir;
 
 use database::sea_orm::{Database, DatabaseConnection};
 use migration::{Migrator, MigratorTrait};
@@ -26,23 +25,15 @@ pub async fn run() {
     Migrator::up(&db_connection, None).await.unwrap();
 
     // global app state.
-    let state: AppState = AppState { db_connection };
+    let app_state: AppState = AppState { db_connection };
 
     // setup all required middlewares.
-    let middlewares: Router = middlewares::setup(state, &config);
+    let middlewares: Router = middlewares::setup(&config, app_state);
 
-    // push routers into the middlewares.
-    let router: Router = routers::setup(middlewares);
+    // setup api router with all middlewares and static assets.
+    let router: Router = routers::setup(&config, middlewares);
 
-    // push frontend static files to root of url.
-    let router: Router = router.push(
-        Router::new().path("<**rest_path>").get(
-            StaticDir::new([config.frontend.clone()])
-                .defaults("index.html")
-                .listing(true),
-        ),
-    );
-
+    // start server with router.
     let acceptor: TcpAcceptor = TcpListener::new(config.url_api()).bind().await;
     Server::new(acceptor).serve(router).await;
 }
