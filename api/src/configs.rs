@@ -1,5 +1,7 @@
 use std::env;
 
+use modules::utility::env_utils::get_env_var;
+
 #[derive(Debug)]
 pub struct Config {
     pub host: String,
@@ -35,11 +37,10 @@ impl Default for Config {
 
 impl Config {
     pub fn new() -> Self {
-        let host: String = env::var("CYB_HOST").expect("CYB_HOST is not set in .env file");
-        let port: String = env::var("CYB_PORT").expect("CYB_PORT is not set in .env file");
-        let fqdn: String = env::var("CYB_FQDN").expect("CYB_FQDN is not set in .env file");
-        let frontend: String =
-            env::var("CYB_FRONTEND").expect("CYB_FRONTEND is not set in .env file");
+        let host: String = get_env_var("CYB_HOST");
+        let port: String = get_env_var("CYB_PORT");
+        let fqdn: String = get_env_var("CYB_FQDN");
+        let frontend: String = get_env_var("CYB_FRONTEND");
         let database: ConfigDatabase = ConfigDatabase::new();
         let jwt: ConfigJWT = ConfigJWT::new();
 
@@ -75,12 +76,12 @@ impl Default for ConfigDatabase {
 }
 impl ConfigDatabase {
     pub fn new() -> Self {
-        let kind: String = env::var("CYB_DB_KIND").expect("CYB_DB_KIND is not set in .env file");
-        let host: String = env::var("CYB_DB_HOST").expect("CYB_DB_HOST is not set in .env file");
-        let port: String = env::var("CYB_DB_PORT").expect("CYB_DB_PORT is not set in .env file");
-        let name: String = env::var("CYB_DB_NAME").expect("CYB_DB_NAME is not set in .env file");
-        let user: String = env::var("CYB_DB_USER").expect("CYB_DB_USER is not set in .env file");
-        let pass: String = env::var("CYB_DB_PASS").expect("CYB_DB_PASS is not set in .env file");
+        let kind: String = get_env_var("CYB_DB_KIND");
+        let host: String = get_env_var("CYB_DB_HOST");
+        let port: String = get_env_var("CYB_DB_PORT");
+        let name: String = get_env_var("CYB_DB_NAME");
+        let user: String = get_env_var("CYB_DB_USER");
+        let pass: String = get_env_var("CYB_DB_PASS");
 
         ConfigDatabase {
             kind,
@@ -112,12 +113,9 @@ impl Default for ConfigJWT {
 
 impl ConfigJWT {
     pub fn new() -> Self {
-        let secret: String =
-            env::var("CYB_JWT_SECRET").expect("CYB_JWT_SECRET is not set in .env file");
-        let max_age: String =
-            env::var("CYB_JWT_MAX_AGE").expect("CYB_JWT_MAX_AGE is not set in .env file");
-        let expiration_time: String = env::var("CYB_JWT_EXPIRATION_TIME")
-            .expect("CYB_JWT_EXPIRATION_TIME is not set in .env file");
+        let secret: String = get_env_var("CYB_JWT_SECRET");
+        let max_age: String = get_env_var("CYB_JWT_MAX_AGE");
+        let expiration_time: String = get_env_var("CYB_JWT_EXPIRATION_TIME");
 
         ConfigJWT {
             secret,
