@@ -1,8 +1,4 @@
-use salvo::compression::Compression;
 use salvo::conn::tcp::TcpAcceptor;
-use salvo::cors::Cors;
-use salvo::http::Method;
-use salvo::jwt_auth::{ConstDecoder, HeaderFinder};
 use salvo::prelude::*;
 use salvo::serve_static::StaticDir;
 
@@ -16,7 +12,7 @@ mod schemas;
 mod users;
 
 use configs::Config;
-use schemas::{AppState, JwtClaims};
+use schemas::AppState;
 
 #[tokio::main]
 pub async fn run() {
