@@ -21,15 +21,18 @@ pub async fn run() {
     let db_connection: DatabaseConnection = databases::setup_database(&configs).await;
 
     // global app state.
-    let app_state: AppState = AppState { db_connection };
+    let app_state: AppState = AppState {
+        db_connection,
+        configs,
+    };
 
     // setup all required middlewares.
-    let middlewares: Router = middlewares::setup(&configs, app_state);
+    let middlewares: Router = middlewares::setup(&app_state);
 
     // setup api router with all middlewares and static assets.
-    let router: Router = routers::setup(&configs, middlewares);
+    let router: Router = routers::setup(&app_state, middlewares);
 
     // start server with router.
-    let acceptor: TcpAcceptor = TcpListener::new(configs.url_api()).bind().await;
+    let acceptor: TcpAcceptor = TcpListener::new(app_state.configs.url_api()).bind().await;
     Server::new(acceptor).serve(router).await;
 }

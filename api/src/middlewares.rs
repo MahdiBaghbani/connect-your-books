@@ -1,20 +1,20 @@
 use salvo::compression::Compression;
-use salvo::cors::Cors;
+use salvo::cors::{Cors, CorsHandler};
 use salvo::http::Method;
-use salvo::jwt_auth::{ConstDecoder, HeaderFinder};
+use salvo::jwt_auth::{ConstDecoder, HeaderFinder, QueryFinder};
 use salvo::prelude::*;
 
-use crate::configs::Config;
 use crate::schemas::{AppState, JwtClaims};
 
-pub fn setup(config: &Config, app_state: AppState) -> Router {
+pub fn setup(app_state: &AppState) -> Router {
     // create necessary middlewares.
     let logger: Logger = Logger::new();
 
-    let auth_handler: JwtAuth<JwtClaims, _> =
-        JwtAuth::new(ConstDecoder::from_secret(config.secret_bytes()))
-            .finders(vec![Box::new(HeaderFinder::new())])
-            .force_passed(true);
+    let auth_handler: JwtAuth<JwtClaims, _> = JwtAuth::new(ConstDecoder::from_secret(
+        app_state.configs.jwt_secret_bytes(),
+    ))
+    .finders(vec![Box::new(HeaderFinder::new())])
+    .force_passed(true);
 
     let cache: CachingHeaders = CachingHeaders::new();
 
@@ -23,14 +23,14 @@ pub fn setup(config: &Config, app_state: AppState) -> Router {
         .enable_brotli(CompressionLevel::Minsize)
         .force_priority(true);
 
-    let cors_handler = Cors::new()
-        .allow_origin(&config.url_api())
+    let cors_handler: CorsHandler = Cors::new()
+        .allow_origin(&app_state.configs.url_api())
         .allow_methods(vec![Method::GET, Method::POST, Method::DELETE])
         .into_handler();
 
     // create a router with all the middlewares.
     Router::new()
-        .hoop(affix::inject(app_state))
+        .hoop(affix::inject(app_state.clone()))
         .hoop(logger)
         .hoop(auth_handler)
         .hoop(cache)

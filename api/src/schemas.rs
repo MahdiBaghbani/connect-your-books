@@ -2,9 +2,12 @@ use serde::{Deserialize, Serialize};
 
 use database::sea_orm::DatabaseConnection;
 
+use crate::configs::Config;
+
 #[derive(Debug, Clone)]
 pub struct AppState {
     pub db_connection: DatabaseConnection,
+    pub configs: Config,
 }
 
 #[derive(Debug, Deserialize)]
@@ -24,7 +27,11 @@ pub struct SignInUserSchema {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct JwtClaims {
+    // (subject): Subject of the JWT (the user)
     pub sub: String,
-    pub iat: usize,
-    pub exp: usize,
+    // (issued at time): Time at which the JWT was issued;
+    // can be used to determine age of the JWT.
+    pub iat: i64,
+    // (expiration time): Time after which the JWT expires
+    pub exp: i64,
 }

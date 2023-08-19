@@ -2,7 +2,7 @@ use std::env;
 
 use modules::utility::env_utils::get_env_var;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Config {
     pub host: String,
     pub port: String,
@@ -12,7 +12,7 @@ pub struct Config {
     pub jwt: ConfigJWT,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ConfigDatabase {
     pub kind: String,
     pub host: String,
@@ -22,10 +22,10 @@ pub struct ConfigDatabase {
     pub pass: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ConfigJWT {
     pub secret: String,
-    pub max_age: i32,
+    pub max_age: i64,
     pub expiration_time: String,
 }
 
@@ -64,7 +64,7 @@ impl Config {
         self.database.url()
     }
 
-    pub fn secret_bytes(&self) -> &[u8] {
+    pub fn jwt_secret_bytes(&self) -> &[u8] {
         self.jwt.secret_bytes()
     }
 }
@@ -119,7 +119,7 @@ impl ConfigJWT {
 
         ConfigJWT {
             secret,
-            max_age: max_age.parse::<i32>().unwrap_or(60),
+            max_age: max_age.parse::<i64>().unwrap_or(60),
             expiration_time,
         }
     }
