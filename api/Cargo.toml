@@ -33,6 +33,7 @@ features = [
     "jwt-auth",
     "logging",
     "oapi",
+    "rate-limiter",
     "serve-static"
 ]
 
