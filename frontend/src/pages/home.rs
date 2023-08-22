@@ -3,7 +3,7 @@
 // but some rules are too "annoying" or are not applicable for your case.)
 #![allow(clippy::wildcard_imports)]
 
-use seed::{prelude::*, *};
+use seed::{*, prelude::*};
 
 use crate::components::svg;
 use crate::pages::components::home::{cta, features, hero, team};
@@ -59,7 +59,8 @@ fn init_team() -> Vec<TeamMember> {
             name: "Yashar PourMohammad".to_string(),
             role: "Code Guru".to_string(),
             description: "Yashar is keen to understand the inner workings of mind, code and \
-            society. He thinks too much and codes too little.".to_string(),
+            society. He thinks too much and codes too little."
+                .to_string(),
             image_url: "/assets/images/vendor/yashar_pourmohammad.avif".to_string(),
             links: Some(vec![
                 TeamMemberLink {

@@ -9,10 +9,7 @@ use crate::pages::home::Msg;
 
 pub fn view_feature_list() -> Node<Msg> {
     section![
-        C![
-            "bg-white",
-            "dark:bg-gray-900"""
-        ],
+        C!["bg-white", "dark:bg-gray-900"],
         div![
             C![
                 "py-8",
