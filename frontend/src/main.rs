@@ -3,7 +3,7 @@
 // but some rules are too "annoying" or are not applicable for your case.)
 #![allow(clippy::wildcard_imports)]
 
-use seed::{prelude::*, *};
+use seed::{*, prelude::*};
 
 use crate::pages::components;
 use crate::pages::components::footer::view_footer;
@@ -16,6 +16,8 @@ const PROJECTS: &str = "projects";
 const CALENDAR: &str = "calendar";
 const REPORTS: &str = "reports";
 
+const AUTHENTICATION: &str = "authentication";
+
 // ------ ------
 //     Init
 // ------ ------
@@ -25,16 +27,20 @@ fn init(url: Url, orders: &mut impl Orders<Msg>) -> Model {
     orders
         .subscribe(Msg::UrlChanged)
         .stream(streams::window_event(Ev::Click, |_| Msg::HideProfileMenu));
+
     Model {
         ctx: Context {
-            user: None,
+            user: Some(User {
+                username: "MahdiBaghbani".to_string(),
+                email: "blah@blah".to_string(),
+            }),
             token: None,
         },
 
         base_url: url.to_hash_base_url(),
         page: Pages::init(url.clone(), orders),
         is_dark_mode: false,
-        navbar: init_navbar(url.to_hash_base_url()),
+        navbar: init_navbar(&url.to_hash_base_url()),
         navbar_active_item_id: init_active_navbar_item_id(url),
         navbar_hamburger_menu_visible: false,
         profile_menu: init_profile_menu(),
@@ -42,32 +48,32 @@ fn init(url: Url, orders: &mut impl Orders<Msg>) -> Model {
     }
 }
 
-fn init_navbar(base_url: Url) -> Vec<NavigationItem> {
+fn init_navbar(base_url: &Url) -> Vec<NavigationItem> {
     vec![
         NavigationItem {
             id: 0,
             name: "Dashboard".to_string(),
-            href: Urls::new(&base_url).dashboard().base().to_string(),
+            href: Urls::new(base_url).dashboard().base().to_string(),
         },
         NavigationItem {
             id: 1,
             name: "Team".to_string(),
-            href: Urls::new(&base_url).team().base().to_string(),
+            href: Urls::new(base_url).team().base().to_string(),
         },
         NavigationItem {
             id: 2,
             name: "Projects".to_string(),
-            href: Urls::new(&base_url).projects().base().to_string(),
+            href: Urls::new(base_url).projects().base().to_string(),
         },
         NavigationItem {
             id: 3,
             name: "Calendar".to_string(),
-            href: Urls::new(&base_url).calendar().base().to_string(),
+            href: Urls::new(base_url).calendar().base().to_string(),
         },
         NavigationItem {
             id: 4,
             name: "Reports".to_string(),
-            href: Urls::new(&base_url).reports().base().to_string(),
+            href: Urls::new(base_url).reports().base().to_string(),
         },
     ]
 }
@@ -148,6 +154,7 @@ pub enum Pages {
     Projects(pages::projects::Model),
     Calendar(pages::calendar::Model),
     Reports(pages::reports::Model),
+    Authentication(pages::authentication::Model),
     NotFound,
 }
 
@@ -171,6 +178,10 @@ impl Pages {
             [REPORTS] => Self::Reports(pages::reports::init(
                 url,
                 &mut orders.proxy(Msg::ReportsMsg),
+            )),
+            [AUTHENTICATION] => Self::Authentication(pages::authentication::init(
+                url,
+                &mut orders.proxy(Msg::AuthenticationMsg),
             )),
             _ => Self::NotFound,
         }
@@ -202,6 +213,9 @@ impl<'a> Urls<'a> {
     pub fn reports(self) -> pages::reports::Urls<'a> {
         pages::reports::Urls::new(self.base_url().add_hash_path_part(REPORTS))
     }
+    pub fn authentication(self) -> pages::authentication::Urls<'a> {
+        pages::authentication::Urls::new(self.base_url().add_hash_path_part(AUTHENTICATION))
+    }
 }
 
 // ------ ------
@@ -226,6 +240,7 @@ pub enum Msg {
     ProjectsMsg(pages::projects::Msg),
     CalendarMsg(pages::calendar::Msg),
     ReportsMsg(pages::reports::Msg),
+    AuthenticationMsg(pages::authentication::Msg),
 }
 
 // `update` describes how to handle each `Msg`.
@@ -283,6 +298,11 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
                 pages::reports::update(msg, model, &mut orders.proxy(Msg::ReportsMsg))
             }
         }
+        Msg::AuthenticationMsg(msg) => {
+            if let Pages::Authentication(model) = &mut model.page {
+                pages::authentication::update(msg, model, &mut orders.proxy(Msg::AuthenticationMsg))
+            }
+        }
     }
 }
 
@@ -290,28 +310,30 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
 //     View
 // ------ ------
 
+// ----- view_content ------
+fn view_content(page: &Pages) -> Vec<Node<Msg>> {
+    match page {
+        Pages::Home(model) => pages::home::view(model).map_msg(Msg::HomeMsg),
+        Pages::Dashboard(_model) => pages::dashboard::view().map_msg(Msg::DashboardMsg),
+        Pages::Team(_model) => pages::team::view().map_msg(Msg::TeamMsg),
+        Pages::Projects(_model) => pages::projects::view().map_msg(Msg::ProjectsMsg),
+        Pages::Calendar(_model) => pages::calendar::view().map_msg(Msg::CalendarMsg),
+        Pages::Reports(_model) => pages::reports::view().map_msg(Msg::ReportsMsg),
+        Pages::Authentication(model) => {
+            pages::authentication::view(model).map_msg(Msg::AuthenticationMsg)
+        }
+        Pages::NotFound => pages::dashboard::view().map_msg(Msg::DashboardMsg),
+    }
+}
+
 fn view(model: &Model) -> Vec<Node<Msg>> {
     vec![div![
         IF!(model.is_dark_mode => C!["dark"]),
-        C!["min-h-full"],
+        C!["flex", "flex-col", "min-h-full"],
         components::navbar::view_navbar(model, &model.base_url, model.ctx.user.as_ref(),),
         view_content(&model.page),
         view_footer(),
     ]]
-}
-
-// ----- view_content ------
-
-fn view_content(page: &Pages) -> Vec<Node<Msg>> {
-    match page {
-        Pages::Home(model) => pages::home::view(model).map_msg(Msg::HomeMsg),
-        Pages::Dashboard(model) => pages::dashboard::view().map_msg(Msg::DashboardMsg),
-        Pages::Team(model) => pages::team::view().map_msg(Msg::TeamMsg),
-        Pages::Projects(model) => pages::projects::view().map_msg(Msg::ProjectsMsg),
-        Pages::Calendar(model) => pages::calendar::view().map_msg(Msg::CalendarMsg),
-        Pages::Reports(model) => pages::reports::view().map_msg(Msg::ReportsMsg),
-        Pages::NotFound => pages::dashboard::view().map_msg(Msg::DashboardMsg),
-    }
 }
 
 // ------ ------
