@@ -13,7 +13,10 @@ pub fn setup(app_state: &AppState) -> Router {
     let auth_handler: JwtAuth<JwtClaims, _> = JwtAuth::new(ConstDecoder::from_secret(
         app_state.configs.jwt_secret_bytes(),
     ))
-    .finders(vec![Box::new(HeaderFinder::new())])
+        .finders(vec![
+            Box::new(HeaderFinder::new()),
+            Box::new(QueryFinder::new("jwt_token")),
+        ])
     .force_passed(true);
 
     let cache: CachingHeaders = CachingHeaders::new();
