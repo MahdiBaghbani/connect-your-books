@@ -5,7 +5,7 @@
 
 use seed::{*, prelude::*};
 
-use crate::{Model, Msg, User};
+use crate::{Model, Msg, Urls, User};
 use crate::components::svg;
 
 pub fn view_navbar(model: &Model, base_url: &Url, user: Option<&User>) -> Vec<Node<Msg>> {
@@ -51,7 +51,7 @@ fn view_navbar_left(base_url: &Url) -> Node<Msg> {
             attrs! {
                 At::Src => "/assets/icons/logo.svg",
                 At::Alt => "Connect Your Books Logo"
-            }
+            },
         ],
         span![
             C![
@@ -146,7 +146,7 @@ fn view_navbar_right(model: &Model, user: Option<&User>) -> Node<Msg> {
                 view_navbar_hamburger_menu(&model.navbar_hamburger_menu_visible),
             ]
         } else {
-            vec![view_signin_button()]
+            vec![view_signin_button(&model.base_url)]
         },
     ]
 }
@@ -306,7 +306,7 @@ fn view_profile_dropdown(model: &Model) -> Node<Msg> {
     ]
 }
 
-fn view_signin_button() -> Node<Msg> {
+fn view_signin_button(base_url: &Url) -> Node<Msg> {
     button![
         C![
             "text-white",
@@ -327,7 +327,8 @@ fn view_signin_button() -> Node<Msg> {
             "dark:hover:bg-blue-700",
             "dark:focus:ring-blue-800"
         ],
-        "Sign in"
+        attrs! {At::Href => format!("{}", Urls::new(base_url).authentication().base().to_string())},
+        "Sign in",
     ]
 }
 
