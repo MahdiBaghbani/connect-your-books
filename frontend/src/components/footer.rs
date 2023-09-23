@@ -6,9 +6,9 @@
 use chrono::prelude::*;
 use seed::{*, prelude::*};
 
-use crate::Msg;
+use crate::updates;
 
-pub fn view_footer() -> Vec<Node<Msg>> {
+pub fn view_footer() -> Vec<Node<updates::Msg>> {
     vec![footer![
         C![
             "p-4", "bg-white", "md:p-8", "lg:p-10" "dark:bg-gray-800"

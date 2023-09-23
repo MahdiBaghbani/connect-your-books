@@ -5,10 +5,12 @@
 
 use seed::{*, prelude::*};
 
-use crate::{Model, Msg, Urls, User};
 use crate::components::svg;
+use crate::models;
+use crate::updates;
+use crate::urls;
 
-pub fn view_navbar(model: &Model, base_url: &Url, user: Option<&User>) -> Vec<Node<Msg>> {
+pub fn view_navbar(model: &models::Model, base_url: &Url, user: Option<&models::User>) -> Vec<Node<updates::Msg>> {
     vec![nav![
         C![
             "bg-white",
@@ -39,7 +41,7 @@ pub fn view_navbar(model: &Model, base_url: &Url, user: Option<&User>) -> Vec<No
     ]]
 }
 
-fn view_navbar_left(base_url: &Url) -> Node<Msg> {
+fn view_navbar_left(base_url: &Url) -> Node<updates::Msg> {
     // ------ Logo ------
     a![
         C!["flex", "items-center"],
@@ -66,7 +68,7 @@ fn view_navbar_left(base_url: &Url) -> Node<Msg> {
     ]
 }
 
-fn view_navbar_middle(model: &Model) -> Node<Msg> {
+fn view_navbar_middle(model: &models::Model) -> Node<updates::Msg> {
     div![
         IF!(!model.navbar_hamburger_menu_visible => C!["hidden"]),
         C![
@@ -129,14 +131,14 @@ fn view_navbar_middle(model: &Model) -> Node<Msg> {
                     },
                     attrs! {At::Href => format!("{}", item.href)},
                     format!("{}", item.name),
-                    ev(Ev::Click, move |_| Msg::ChangeNavBarActiveItem(id)),
+                    ev(Ev::Click, move |_| updates::Msg::ChangeNavBarActiveItem(id)),
                 ]
             }),
         ],
     ]
 }
 
-fn view_navbar_right(model: &Model, user: Option<&User>) -> Node<Msg> {
+fn view_navbar_right(model: &models::Model, user: Option<&models::User>) -> Node<updates::Msg> {
     div![
         C!["flex", "items-center", "md:order-2",],
         view_dark_mode_button(&model.is_dark_mode),
@@ -146,12 +148,12 @@ fn view_navbar_right(model: &Model, user: Option<&User>) -> Node<Msg> {
                 view_navbar_hamburger_menu(&model.navbar_hamburger_menu_visible),
             ]
         } else {
-            vec![view_signin_button(&model.base_url)]
+            vec![view_signin_button(&model.url)]
         },
     ]
 }
 
-fn view_dark_mode_button(is_dark_mode: &bool) -> Node<Msg> {
+fn view_dark_mode_button(is_dark_mode: &bool) -> Node<updates::Msg> {
     button![
         C![
             "inline-flex",
@@ -193,11 +195,11 @@ fn view_dark_mode_button(is_dark_mode: &bool) -> Node<Msg> {
                 }]
             },
         ],
-        ev(Ev::Click, move |_| Msg::ToggleDarkMode),
+        ev(Ev::Click, move |_| updates::Msg::ToggleDarkMode),
     ]
 }
 
-fn view_profile_button(model: &Model) -> Node<Msg> {
+fn view_profile_button(model: &models::Model) -> Node<updates::Msg> {
     div![
         C!["relative"],
         button![
@@ -229,14 +231,14 @@ fn view_profile_button(model: &Model) -> Node<Msg> {
             ev(Ev::Click, move |event| {
                 // prevent Msg::HideProfileMenu.
                 event.stop_propagation();
-                Msg::ToggleProfileMenu
+                updates::Msg::ToggleProfileMenu
             }),
         ],
         IF!(model.profile_menu_visible=>view_profile_dropdown(model)),
     ]
 }
 
-fn view_profile_dropdown(model: &Model) -> Node<Msg> {
+fn view_profile_dropdown(model: &models::Model) -> Node<updates::Msg> {
     div![
         C![
             "absolute",
@@ -306,7 +308,7 @@ fn view_profile_dropdown(model: &Model) -> Node<Msg> {
     ]
 }
 
-fn view_signin_button(base_url: &Url) -> Node<Msg> {
+fn view_signin_button(base_url: &Url) -> Node<updates::Msg> {
     button![
         C![
             "text-white",
@@ -327,12 +329,12 @@ fn view_signin_button(base_url: &Url) -> Node<Msg> {
             "dark:hover:bg-blue-700",
             "dark:focus:ring-blue-800"
         ],
-        attrs! {At::Href => format!("{}", Urls::new(base_url).authentication().base().to_string())},
+        attrs! {At::Href => format!("{}", urls::Urls::new(base_url).authentication().base().to_string())},
         "Sign in",
     ]
 }
 
-fn view_navbar_hamburger_menu(visible: &bool) -> Node<Msg> {
+fn view_navbar_hamburger_menu(visible: &bool) -> Node<updates::Msg> {
     button![
         C![
             "inline-flex",
@@ -387,6 +389,6 @@ fn view_navbar_hamburger_menu(visible: &bool) -> Node<Msg> {
                 },
             ],
         ],
-        ev(Ev::Click, move |_| Msg::ToggleNavBarHamburgerView),
+        ev(Ev::Click, move |_| updates::Msg::ToggleNavBarHamburgerView),
     ]
 }

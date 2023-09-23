@@ -1,13 +1,8 @@
-// (Lines like the one below ignore selected Clippy rules
-//  - it's useful when you want to check your code with `cargo make verify`
-// but some rules are too "annoying" or are not applicable for your case.)
-#![allow(clippy::wildcard_imports)]
-
 use seed::{*, prelude::*};
 
-use crate::pages::authentication::Msg;
+use crate::pages::authentication::updates;
 
-pub fn view_sign_in_section(base_url: &Url) -> Node<Msg> {
+pub fn view_sign_in_section(base_url: &Url) -> Node<updates::Msg> {
     section![
         C!["bg-gray-50", "dark:bg-gray-900"],
         div![

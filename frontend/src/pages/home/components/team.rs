@@ -1,14 +1,9 @@
-// (Lines like the one below ignore selected Clippy rules
-//  - it's useful when you want to check your code with `cargo make verify`
-// but some rules are too "annoying" or are not applicable for your case.)
-#![allow(clippy::wildcard_imports)]
+use seed::{*, prelude::*};
 
-use seed::{prelude::*, *};
+use crate::pages::home::models;
+use crate::pages::home::updates;
 
-use crate::pages::home::Msg;
-use crate::pages::home::{TeamMember, TeamMemberLink};
-
-pub fn view_our_team(team: &[TeamMember]) -> Node<Msg> {
+pub fn view_our_team(team: &[models::TeamMember]) -> Node<updates::Msg> {
     section![
         C!["bg-white", "dark:bg-gray-900"],
         div![
@@ -58,7 +53,7 @@ pub fn view_our_team(team: &[TeamMember]) -> Node<Msg> {
     ]
 }
 
-fn view_team_member(member: &TeamMember) -> Node<Msg> {
+fn view_team_member(member: &models::TeamMember) -> Node<updates::Msg> {
     div![
         C![
             "max-w-sm",
@@ -125,7 +120,7 @@ fn view_team_member(member: &TeamMember) -> Node<Msg> {
     ]
 }
 
-fn view_team_member_link(link: &TeamMemberLink) -> Node<Msg> {
+fn view_team_member_link(link: &models::TeamMemberLink) -> Node<updates::Msg> {
     li![a![
         C![
             "text-gray-500",
