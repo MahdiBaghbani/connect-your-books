@@ -16,15 +16,15 @@ entity = { path = "../database/entity" }
 migration = { path = "../database/migration" }
 modules = { path = "../modules" }
 # external crates.
-jsonwebtoken = "8.0"
+jsonwebtoken = "9.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 time = "0.3"
-tokio = { version = "1.31", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.33", features = ["macros", "rt-multi-thread"] }
 tracing = "0.1"
 
 [dependencies.salvo]
-version = "0.50"
+version = "0.58"
 features = [
     "affix",
     "caching-headers",
