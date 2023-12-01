@@ -5,7 +5,6 @@ authors = ["Mahdi Baghbani <mahdi.baghbani1@gmail.com>"]
 description = "Connect Your Books"
 keywords = ["timesheet"]
 license = "AGPL-3.0-only"
-license-file = "LICENSE"
 homepage = "https://github.com/MahdiBaghbani/connect-your-books"
 repository = "https://github.com/MahdiBaghbani/connect-your-books"
 edition = "2021"

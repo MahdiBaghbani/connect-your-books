@@ -11,10 +11,10 @@ path = "src/lib.rs"
 [dependencies]
 entity = { path = "entity" }
 sea-orm = { version = "0.12", features = ["debug-print", "runtime-tokio-rustls", "sqlx-postgres", "macros"] }
-uuid = { version = "1.5", features = ["v4"] }
+uuid = { version = "1.6", features = ["v4"] }
 
 [dev-dependencies]
-tokio = { version = "1.33", features = ["macros", "rt"] }
+tokio = { version = "1.34", features = ["macros", "rt"] }
 
 [features]
 mock = ["sea-orm/mock"]
