@@ -1,18 +1,28 @@
 [package]
 name = "cyb"
 version = "0.1.0"
+authors = ["Mahdi Baghbani <mahdi.baghbani1@gmail.com>"]
+description = "Connect Your Books"
+keywords = ["timesheet"]
+license = "AGPL-3.0-only"
+license-file = "LICENSE"
+homepage = "https://github.com/MahdiBaghbani/connect-your-books"
+repository = "https://github.com/MahdiBaghbani/connect-your-books"
 edition = "2021"
 publish = false
 
 [profile.release]
-# Do not perform backtrace for panic on release builds.
+# do not perform backtrace for panic on release builds.
 panic = "abort"
-# Perform optimizations on all codegen units.
+# perform optimizations on all codegen units.
 codegen-units = 1
 # "s" for normal optimize or "z" to optimize "aggressively" for size.
 opt-level = "z"
-# Enable link time optimization.
-lto = true
+# enable link time optimization.
+lto = "fat"
+# Incremental compilation causes rustc to save additional information to disk which will be reused when recompiling
+# the crate, improving re-compile times. The additional information is stored in the target directory.
+incremental = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [workspace]
