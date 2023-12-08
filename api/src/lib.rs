@@ -1,16 +1,17 @@
 use salvo::conn::tcp::TcpAcceptor;
 use salvo::prelude::*;
 
+use configs::Config;
+use database::sea_orm::DatabaseConnection;
+use schemas::AppState;
+
 mod configs;
 mod databases;
 mod middlewares;
 mod routers;
 mod schemas;
 mod users;
-
-use configs::Config;
-use database::sea_orm::DatabaseConnection;
-use schemas::AppState;
+mod constants;
 
 #[tokio::main]
 pub async fn run() {
