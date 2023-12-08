@@ -6,6 +6,7 @@ use crate::constants;
 
 mod database;
 mod jwt;
+mod openapi;
 
 #[derive(Debug, Clone)]
 pub struct Config {
@@ -17,7 +18,6 @@ pub struct Config {
     pub jwt: ConfigJWT,
 }
 
-
 impl Default for Config {
     fn default() -> Self {
         Config::new()
@@ -26,10 +26,10 @@ impl Default for Config {
 
 impl Config {
     pub fn new() -> Self {
-        let default_host: Option<String> = Some(constants::CYB_HOST.to_string());
-        let default_port: Option<String> = Some(constants::CYB_PORT.to_string());
-        let default_fqdn: Option<String> = Some(constants::CYB_FQDN.to_string());
-        let default_frontend: Option<String> = Some(constants::CYB_FRONTEND.to_string());
+        let default_host: Option<String> = Some(constants::CYB_HOST);
+        let default_port: Option<String> = Some(constants::CYB_PORT);
+        let default_fqdn: Option<String> = Some(constants::CYB_FQDN);
+        let default_frontend: Option<String> = Some(constants::CYB_FRONTEND);
 
         let host: String = get_env_var("CYB_HOST", default_host);
         let port: String = get_env_var("CYB_PORT", default_port);
@@ -63,5 +63,3 @@ impl Config {
         self.jwt.secret_bytes()
     }
 }
-
-
