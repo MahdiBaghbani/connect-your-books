@@ -1,17 +1,41 @@
 use salvo::prelude::*;
 
-pub fn setup_openapi(routers: Router) -> Router {
+pub fn setup_open_api(router: Router, path: &str, title: &str, version: &str) -> Router {
     // create api documentation from routers.
-    let docs: OpenApi = OpenApi::new("Connect Your Books API", "0.0.1").merge_router(&routers);
+    let docs: OpenApi = OpenApi::new(title, version).merge_router(&router);
 
-    // push to routes.
-    routers.push(docs.into_router("/api/docs/openapi.json"))
+    // push to router.
+    router.unshift(docs.into_router(path))
 }
 
-pub fn setup_swagger_ui(routers: Router) -> Router {
+pub fn setup_swagger(router: Router, path: String, open_api_path: String) -> Router {
     // create swagger ui from json.
-    let swagger_ui: SwaggerUi = SwaggerUi::new("/api/docs/openapi.json");
+    let swagger: SwaggerUi = SwaggerUi::new(open_api_path);
 
-    // push to routes.
-    routers.push(swagger_ui.into_router("swagger-ui"))
+    // push to router.
+    router.unshift(swagger.into_router(path))
+}
+
+pub fn setup_scalar(router: Router, path: String, open_api_path: String) -> Router {
+    // create scalar from json.
+    let scalar: Scalar = Scalar::new(open_api_path);
+
+    // push to router.
+    router.unshift(scalar.into_router(path))
+}
+
+pub fn setup_rapidoc(router: Router, path: String, open_api_path: String) -> Router {
+    // create rapidoc from json.
+    let rapidoc: RapiDoc = RapiDoc::new(open_api_path);
+
+    // push to router.
+    router.unshift(rapidoc.into_router(path))
+}
+
+pub fn setup_redoc(router: Router, path: String, open_api_path: String) -> Router {
+    // create redoc from json.
+    let redoc: ReDoc = ReDoc::new(open_api_path);
+
+    // push to router.
+    router.unshift(redoc.into_router(path))
 }

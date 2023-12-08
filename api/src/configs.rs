@@ -1,6 +1,7 @@
 use database::ConfigDatabase;
 use jwt::ConfigJWT;
 use modules::utility::env_utils::get_env_var;
+use openapi::ConfigOpenApi;
 
 use crate::constants;
 
@@ -14,8 +15,9 @@ pub struct Config {
     pub port: String,
     pub fqdn: String,
     pub frontend: String,
-    pub database: ConfigDatabase,
     pub jwt: ConfigJWT,
+    pub open_api: ConfigOpenApi,
+    pub database: ConfigDatabase,
 }
 
 impl Default for Config {
@@ -26,10 +28,10 @@ impl Default for Config {
 
 impl Config {
     pub fn new() -> Self {
-        let default_host: Option<String> = Some(constants::CYB_HOST);
-        let default_port: Option<String> = Some(constants::CYB_PORT);
-        let default_fqdn: Option<String> = Some(constants::CYB_FQDN);
-        let default_frontend: Option<String> = Some(constants::CYB_FRONTEND);
+        let default_host: Option<&str> = Some(constants::CYB_HOST);
+        let default_port: Option<&str> = Some(constants::CYB_PORT);
+        let default_fqdn: Option<&str> = Some(constants::CYB_FQDN);
+        let default_frontend: Option<&str> = Some(constants::CYB_FRONTEND);
 
         let host: String = get_env_var("CYB_HOST", default_host);
         let port: String = get_env_var("CYB_PORT", default_port);
@@ -37,6 +39,7 @@ impl Config {
         let frontend: String = get_env_var("CYB_FRONTEND", default_frontend);
 
         let jwt: ConfigJWT = ConfigJWT::new();
+        let open_api: ConfigOpenApi = ConfigOpenApi::new();
         let database: ConfigDatabase = ConfigDatabase::new();
 
         Config {
@@ -44,8 +47,9 @@ impl Config {
             port,
             fqdn,
             frontend,
-            database,
             jwt,
+            open_api,
+            database,
         }
     }
 

@@ -31,16 +31,16 @@ impl Default for Constants {
 impl Constants {
     pub fn new() -> Self {
         Constants {
-            use_sandbox: get_env_var("CYB_ACUBE_SANDBOX") == "true",
-            sandbox_base_url: get_env_var("CYB_ACUBE_SAND_URL"),
-            sandbox_login_url: get_env_var("CYB_ACUBE_SAND_LOGIN_URL"),
-            sandbox_user: get_env_var("CYB_ACUBE_SAND_USER"),
-            sandbox_pass: get_env_var("CYB_ACUBE_SAND_PASS"),
-            production_base_url: get_env_var("CYB_ACUBE_PROD_URL"),
-            production_login_url: get_env_var("CYB_ACUBE_PROD_LOGIN_URL"),
-            production_user: get_env_var("CYB_ACUBE_PROD_USER"),
-            production_pass: get_env_var("CYB_ACUBE_PROD_PASS"),
-            token_file: get_env_var("CYB_ACUBE_TOKEN_FILE"),
+            use_sandbox: get_env_var("CYB_ACUBE_SANDBOX", None) == "true",
+            sandbox_base_url: get_env_var("CYB_ACUBE_SAND_URL", None),
+            sandbox_login_url: get_env_var("CYB_ACUBE_SAND_LOGIN_URL", None),
+            sandbox_user: get_env_var("CYB_ACUBE_SAND_USER", None),
+            sandbox_pass: get_env_var("CYB_ACUBE_SAND_PASS", None),
+            production_base_url: get_env_var("CYB_ACUBE_PROD_URL", None),
+            production_login_url: get_env_var("CYB_ACUBE_PROD_LOGIN_URL", None),
+            production_user: get_env_var("CYB_ACUBE_PROD_USER", None),
+            production_pass: get_env_var("CYB_ACUBE_PROD_PASS", None),
+            token_file: get_env_var("CYB_ACUBE_TOKEN_FILE", None),
         }
     }
 

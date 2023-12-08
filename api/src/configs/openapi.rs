@@ -26,16 +26,16 @@ impl Default for ConfigOpenApi {
 
 impl ConfigOpenApi {
     pub fn new() -> Self {
-        let default_oapi: Option<String> = Some(constants::CYB_OAPI);
-        let default_oapi_path: Option<String> = Some(constants::CYB_OAPI_PATH);
-        let default_oapi_swagger: Option<String> = Some(constants::CYB_OAPI_SWAGGER);
-        let default_oapi_swagger_path: Option<String> = Some(constants::CYB_OAPI_SWAGGER_PATH);
-        let default_oapi_scalar: Option<String> = Some(constants::CYB_OAPI_SCALAR);
-        let default_oapi_scalar_path: Option<String> = Some(constants::CYB_OAPI_SCALAR_PATH);
-        let default_oapi_rapidoc: Option<String> = Some(constants::CYB_OAPI_RAPIDOC);
-        let default_oapi_rapidoc_path: Option<String> = Some(constants::CYB_OAPI_RAPIDOC_PATH);
-        let default_oapi_redoc: Option<String> = Some(constants::CYB_OAPI_REDOC);
-        let default_oapi_redoc_path: Option<String> = Some(constants::CYB_OAPI_REDOC_PATH);
+        let default_oapi: Option<&str> = Some(constants::CYB_OAPI);
+        let default_oapi_path: Option<&str> = Some(constants::CYB_OAPI_PATH);
+        let default_oapi_swagger: Option<&str> = Some(constants::CYB_OAPI_SWAGGER);
+        let default_oapi_swagger_path: Option<&str> = Some(constants::CYB_OAPI_SWAGGER_PATH);
+        let default_oapi_scalar: Option<&str> = Some(constants::CYB_OAPI_SCALAR);
+        let default_oapi_scalar_path: Option<&str> = Some(constants::CYB_OAPI_SCALAR_PATH);
+        let default_oapi_rapidoc: Option<&str> = Some(constants::CYB_OAPI_RAPIDOC);
+        let default_oapi_rapidoc_path: Option<&str> = Some(constants::CYB_OAPI_RAPIDOC_PATH);
+        let default_oapi_redoc: Option<&str> = Some(constants::CYB_OAPI_REDOC);
+        let default_oapi_redoc_path: Option<&str> = Some(constants::CYB_OAPI_REDOC_PATH);
 
         let enabled: bool = get_env_var("CYB_OAPI", default_oapi) == "true";
         let url_path: String = get_env_var("CYB_OAPI_PATH", default_oapi_path);

@@ -20,12 +20,12 @@ impl Default for ConfigDatabase {
 
 impl ConfigDatabase {
     pub fn new() -> Self {
-        let default_kind: Option<String> = Some(constants::CYB_DB_KIND);
-        let default_host: Option<String> = Some(constants::CYB_DB_HOST);
-        let default_port: Option<String> = Some(constants::CYB_DB_PORT);
-        let default_name: Option<String> = Some(constants::CYB_DB_NAME);
-        let default_user: Option<String> = Some(constants::CYB_DB_USER);
-        let default_pass: Option<String> = Some(constants::CYB_DB_PASS);
+        let default_kind: Option<&str> = Some(constants::CYB_DB_KIND);
+        let default_host: Option<&str> = Some(constants::CYB_DB_HOST);
+        let default_port: Option<&str> = Some(constants::CYB_DB_PORT);
+        let default_name: Option<&str> = Some(constants::CYB_DB_NAME);
+        let default_user: Option<&str> = Some(constants::CYB_DB_USER);
+        let default_pass: Option<&str> = Some(constants::CYB_DB_PASS);
 
         let kind: String = get_env_var("CYB_DB_KIND", default_kind);
         let host: String = get_env_var("CYB_DB_HOST", default_host);

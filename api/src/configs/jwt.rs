@@ -17,9 +17,9 @@ impl Default for ConfigJWT {
 
 impl ConfigJWT {
     pub fn new() -> Self {
-        let default_secret: Option<String> = Some(constants::CYB_JWT_SECRET);
-        let default_max_age: Option<String> = Some(constants::CYB_JWT_MAX_AGE);
-        let default_exp_time: Option<String> = Some(constants::CYB_JWT_EXP_TIME);
+        let default_secret: Option<&str> = Some(constants::CYB_JWT_SECRET);
+        let default_max_age: Option<&str> = Some(constants::CYB_JWT_MAX_AGE);
+        let default_exp_time: Option<&str> = Some(constants::CYB_JWT_EXP_TIME);
 
         let secret: String = get_env_var("CYB_JWT_SECRET", default_secret);
         let max_age: String = get_env_var("CYB_JWT_MAX_AGE", default_max_age);
@@ -27,7 +27,7 @@ impl ConfigJWT {
 
         ConfigJWT {
             secret,
-            max_age: max_age.parse::<i64>().unwrap_or(60),
+            max_age: max_age.parse::<i64>().unwrap_or(constants::CYB_JWT_MAX_AGE_INT),
             exp_time,
         }
     }
