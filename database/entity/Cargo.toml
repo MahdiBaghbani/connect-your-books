@@ -1,6 +1,9 @@
 [package]
 name = "entity"
 version = "0.1.0"
+authors = ["Mahdi Baghbani <mahdi.baghbani1@gmail.com>"]
+description = "Connect Your Books Database Entities"
+license = "AGPL-3.0-only"
 edition = "2021"
 publish = false
 
