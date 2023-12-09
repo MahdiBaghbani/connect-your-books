@@ -15,12 +15,20 @@ on:
 jobs:
   audit:
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        checks:
+          - advisories
+          - bans licenses sources
+
+    # Prevent sudden announcement of a new advisory from failing ci:
+    continue-on-error: ${{ matrix.checks == 'advisories' }}
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: rust-audit-check
-        uses: actions-rs/audit-check@v1.2.0
+      - uses: EmbarkStudios/cargo-deny-action@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          command: check ${{ matrix.checks }}
