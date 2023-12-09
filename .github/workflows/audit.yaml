@@ -1,11 +1,11 @@
 name: Security Audit
 
 on:
-  # Schedule daily updates
+  # Schedule daily updates.
   schedule: [ { cron: "0 0 * * *" } ]
-  # (optional) Run workflow manually
+  # (optional) Run workflow manually.
   workflow_dispatch:
-  # (optional) Run workflow when pushing on master/main
+  # (optional) Run workflow when pushing on master.
   push:
     paths:
       - "**/Cargo.toml"
@@ -14,9 +14,13 @@ on:
 
 jobs:
   audit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/audit-check@issue-104
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: rust-audit-check
+        uses: actions-rs/audit-check@v1.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
