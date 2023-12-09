@@ -31,4 +31,6 @@ jobs:
 
       - uses: EmbarkStudios/cargo-deny-action@v1
         with:
+          log-level: error
           command: check ${{ matrix.checks }}
+          arguments: --all-features
