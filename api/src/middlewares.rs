@@ -17,7 +17,7 @@ pub fn setup(app_state: &AppState) -> Router {
             Box::new(HeaderFinder::new()),
             Box::new(QueryFinder::new("jwt_token")),
         ])
-    .force_passed(true);
+        .force_passed(true);
 
     let cache: CachingHeaders = CachingHeaders::new();
 
@@ -28,7 +28,12 @@ pub fn setup(app_state: &AppState) -> Router {
 
     let cors_handler: CorsHandler = Cors::new()
         .allow_origin(&app_state.configs.url_api())
-        .allow_methods(vec![Method::GET, Method::POST, Method::DELETE])
+        .allow_methods(vec![
+            Method::GET,
+            Method::POST,
+            Method::HEAD,
+            Method::OPTIONS,
+        ])
         .into_handler();
 
     // create a router with all the middlewares.
