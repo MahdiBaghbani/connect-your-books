@@ -9,12 +9,12 @@ on:
   push:
     paths:
       # Run if workflow changes
-      - '.github/workflows/audit.yaml'
+      - ".github/workflows/audit.yaml"
       # Run on changed dependencies
-      - '**/Cargo.toml'
-      - '**/Cargo.lock'
+      - "**/Cargo.toml"
+      - "**/Cargo.lock"
       # Run if the configuration file changes
-      - '**/audit.toml'
+      - "**/audit.toml"
   pull_request:
 
 permissions: read-all
