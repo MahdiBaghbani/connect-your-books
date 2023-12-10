@@ -8,12 +8,19 @@ on:
   # (optional) Run workflow when pushing on master.
   push:
     paths:
-      - "**/Cargo.toml"
-      - "**/Cargo.lock"
+      # Run if workflow changes
+      - '.github/workflows/audit.yaml'
+      # Run on changed dependencies
+      - '**/Cargo.toml'
+      - '**/Cargo.lock'
+      # Run if the configuration file changes
+      - '**/audit.toml'
   pull_request:
 
+permissions: read-all
+
 jobs:
-  audit:
+  general_audit:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -37,10 +44,15 @@ jobs:
 
   security_audit:
     runs-on: ubuntu-22.04
+    permissions:
+      issues: write
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Security Audit
+      - name: Audit Rust Dependencies
         uses: actions-rust-lang/audit@v1
+        with:
+          # Comma separated list of issues to ignore
+          ignore: RUSTSEC-2020-0071
