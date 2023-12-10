@@ -55,4 +55,4 @@ jobs:
         uses: actions-rust-lang/audit@v1
         with:
           # Comma separated list of issues to ignore
-          ignore: RUSTSEC-2020-0071
+          ignore: RUSTSEC-2023-0071
