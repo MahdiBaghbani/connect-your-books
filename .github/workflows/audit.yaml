@@ -34,3 +34,13 @@ jobs:
           log-level: error
           command: check ${{ matrix.checks }}
           arguments: --all-features
+
+  security_audit:
+    runs-on: ubuntu-22.04
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Security Audit
+        uses: actions-rust-lang/audit@v1
