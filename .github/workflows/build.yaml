@@ -4,11 +4,7 @@ on:
   workflow_dispatch:
   # (optional) Run workflow when pushing on master.
   push:
-    branches:
-      - "master"
   pull_request:
-    branches:
-      - "master"
 
 env:
   CRATE_NAME: cyb
@@ -17,7 +13,7 @@ env:
 
 jobs:
   build-backend:
-    if: startsWith( github.ref, 'refs/tags/v' ) || github.ref == 'refs/tags/test-release'
+    if: (startsWith( github.ref, 'refs/tags/v' ) || github.ref == 'refs/tags/test-release') != true
     name: ${{ matrix.platform.os_name }} with rust ${{ matrix.toolchain }}
     runs-on: ${{ matrix.platform.os }}
     strategy:
@@ -86,41 +82,3 @@ jobs:
           toolchain: ${{ matrix.toolchain }}
           args: "--locked --release"
         if: ${{ !matrix.platform.skip_tests }}
-
-      - name: Package as archive
-        shell: bash
-        run: |
-          cd target/${{ matrix.platform.target }}/release
-          if [[ "${{ matrix.platform.os }}" == "windows-latest" ]]; then
-            7z a ../../../${{ matrix.platform.name }} ${{ matrix.platform.bin }}
-          else
-            tar czvf ../../../${{ matrix.platform.name }} ${{ matrix.platform.bin }}
-          fi
-          cd -
-        if: |
-          matrix.toolchain == 'stable' &&
-          ( startsWith( github.ref, 'refs/tags/v' ) ||
-            github.ref == 'refs/tags/test-release' )
-
-      - name: Publish release artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: cyb-${{ matrix.platform.os_name }}
-          path: "cyb-*"
-        if: matrix.toolchain == 'stable' && github.ref == 'refs/tags/test-release'
-
-      - name: Generate SHA-256
-        run: shasum -a 256 ${{ matrix.platform.name }}
-        if: |
-          matrix.toolchain == 'stable' &&
-          matrix.platform.os == 'macOS-latest' &&
-          ( startsWith( github.ref, 'refs/tags/v' ) ||
-            github.ref == 'refs/tags/test-release' )
-
-      - name: Publish GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          draft: true
-          files: "cyb*"
-          body_path: Changes.md
-        if: matrix.toolchain == 'stable' && startsWith( github.ref, 'refs/tags/v' )
