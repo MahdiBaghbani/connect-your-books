@@ -26,9 +26,9 @@ jobs:
         platform:
           - os_name: Linux-x86_64
             os: ubuntu-22.04
-            target: x86_64-unknown-linux-musl
+            target: x86_64-unknown-linux-gnu
             bin: cyb
-            name: cyb-Linux-x86_64-musl.tar.gz
+            name: cyb-Linux-x86_64-GNU.tar.gz
             cross: false
             cargo_command: cargo
 
