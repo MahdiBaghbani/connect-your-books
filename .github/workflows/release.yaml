@@ -29,16 +29,12 @@ jobs:
             target: x86_64-unknown-linux-gnu
             bin: cyb
             name: cyb-Linux-x86_64-GNU.tar.gz
-            cross: false
-            cargo_command: cargo
 
           - os_name: macOS-x86_64
             os: macOS-latest
             target: x86_64-apple-darwin
             bin: cyb
             name: cyb-Darwin-x86_64.tar.gz
-            cross: false
-            cargo_command: cargo
 
           - os_name: Windows-x86_64
             os: windows-latest
